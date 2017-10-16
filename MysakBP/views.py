@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.conf import settings
 import numpy
 import cv2
+import time
 import os
 from django.shortcuts import render
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -20,9 +21,9 @@ def index(request):
 
 
             img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path(),0)
-            cv2.imshow('image', img)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            #cv2.imshow('image', img)
+            #cv2.waitKey(0)
+            #cv2.destroyAllWindows()
             cv2.imwrite('MysakBP/static/WTBW.png', img)
 
 
@@ -34,6 +35,8 @@ def index(request):
         'cisla': [1, 2, 3, 5, 7],
         'foto': img,
         'debug': dbg,
+        'time': round(time.time())
+
     }
 
     return render(request, 'index.html', context)

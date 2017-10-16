@@ -6,10 +6,8 @@
     <title>Title</title>
 </head>
 <body>
-{% for cislo in cisla %}
-    {{ cislo }}
-{% endfor %}
-<img src="{% static foto %} ">
+{% for cislo in cisla %}{% endfor %}
+<img src="{% static foto %}?{{ time }} ">
 
 <form action="{% url 'index' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
 Select image to upload:
