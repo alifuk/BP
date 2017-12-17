@@ -57,7 +57,8 @@ def uploadImage(request):
 
     ali = os.getcwd();
 
-    return HttpResponse('Nahráno')
+
+    return HttpResponse('Nahráno' + os.path.dirname(os.path.abspath(__file__)))
 
 
 def count(request, question_id):
@@ -72,6 +73,7 @@ def saveImage(imgToWrite):
     # cv2.imshow('image',  cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
+
     cv2.imwrite('./MysakBP/static/final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
 
 
