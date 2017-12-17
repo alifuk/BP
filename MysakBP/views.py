@@ -53,7 +53,7 @@ def uploadImage(request):
 
             img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
 
-            cv2.imwrite('MysakBP/static/original.png', img)
+            cv2.imwrite('./MysakBP/static/original.png', img)
 
     ali = os.getcwd();
 
@@ -72,7 +72,7 @@ def saveImage(imgToWrite):
     # cv2.imshow('image',  cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    cv2.imwrite('MysakBP/static/final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
+    cv2.imwrite('./MysakBP/static/final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
 
 
 def work(request):
@@ -101,8 +101,8 @@ def work(request):
 
 def layout(request):
     dbg = []
-    source_foto = ('original.png')
-    final_foto = ('final.png')
+    source_foto = ('./original.png')
+    final_foto = ('./final.png')
     context = {
         'final_foto': final_foto,
         'source_foto': source_foto,
