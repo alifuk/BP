@@ -3,6 +3,8 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'(?P<question_id>[0-9]+)$', views.count, name='count'),
-    url(r'.*$', views.index, name='index'),
+
+    url(r'^work$', views.work, name='work'),
+    url(r'^upload$', views.uploadImage, name='upload_image'),
+    url(r'$', views.layout, name='layout'),
 ]

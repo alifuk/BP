@@ -6,15 +6,164 @@
     <title>Title</title>
 </head>
 <body>
-{% for cislo in cisla %}
-    {{ cislo }}
-{% endfor %}
-<img src="{% static foto %} ">
 
-<form action="{% url 'index' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-Select image to upload:
-    <input type="file" name="fileToUpload" id="fileToUpload">
+<img id="image_original" src="{% static source_foto %}?{{ time }} " style="width: 400px;">
+<img id="image_final" src="{% static final_foto %}?{{ time }} " style="width: 400px;">
+
+
+<form action="{% url 'upload_image' %}" method="post" enctype="multipart/form-data" id="uploader">
+    Zvolte zdrojový obraz:<br>
+    <input type="file" name="fileToUpload" id="fileToUpload"><br>
     <input type="submit" value="Upload Image" name="submit">
 </form>
+<div id="block_container">
+
+</div>
+
+
+<div id="edit_block_pattern" style="display: none;">
+    <select onchange="redraw(); checkForValidButtons(this);">
+        <option value="none">Zvolte operaci</option>
+        <option value="color_bw">Udělat černobílé</option>
+        <option value="color_blue">Ponechat pouze modrou</option>
+        <option value="transform_rotate">Otočit obraz</option>
+        <option value="transform_crop">Oříznout obraz</option>
+        <option value="filter_smooth">Vyhladit obraz</option>
+    </select>
+
+    <button onclick="addBlock(this)">+</button>
+    <button class="delete_button" onclick="deleteBlock(this)">X</button>
+</div>
+
+<script>
+    function validateButtons() {
+        var delete_buttons = document.getElementsByClassName('delete_button');
+        if(delete_buttons.length == 2){
+            delete_buttons[0].disabled = true;
+        } else{
+            delete_buttons[0].disabled = false;
+        }
+    }
+    
+    function deleteBlock(sender){
+        var sender_block = sender.parentNode;
+        var sender_block_parent = sender_block.parentNode;
+        sender_block_parent.removeChild(sender_block);
+        redraw();
+        validateButtons();
+
+    }
+
+    function addBlock(sender) {
+        var sender_block = sender.parentNode;
+        var new_block = prepareNewBlock();
+        insertAfter(new_block, sender_block);
+        validateButtons();
+    }
+
+    function prepareNewBlock() {
+        var pattern = document.getElementById("edit_block_pattern");
+        var new_block = pattern.cloneNode(true);
+        new_block.style.display = "block";
+        new_block.id = "";
+        new_block.className = "edit_block";
+        return new_block;
+    }
+
+    function insertFirstBlock() {
+        var pattern = document.getElementById("block_container");
+        var new_block = prepareNewBlock();
+        pattern.appendChild(new_block);
+    }
+
+
+
+    function checkForValidButtons(e) {
+        console.log('pride');
+        var parent = e.parentNode;
+        console.log(e);
+
+        var x = document.getElementsByClassName("edit_block");
+        console.log(x.length);
+    }
+
+    function uploadImage() {
+        var upload_form = document.getElementById("uploader");
+
+        upload_form.onsubmit = function (e) {
+            var data = new FormData(upload_form);
+            csrftoken = getCookie('csrftoken');
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var image = document.getElementById("image_original");
+                    image.src = image.src + '1';
+                    redraw();
+                }
+            };
+            xhttp.open("POST", "./upload", true);
+
+            xhttp.setRequestHeader('X-CSRFToken', csrftoken)
+            xhttp.send(data);
+
+            e.preventDefault();
+        };
+    }
+
+
+
+    function redraw() {
+        var body = document.getElementsByTagName('body');
+        body[0].style.backgroundColor = 'blue';
+        var edit_blocks = document.getElementsByClassName('edit_block');
+
+        var data = new FormData();
+        for (i = 0; i < edit_blocks.length; i++) {
+            var first_select = edit_blocks[i].getElementsByTagName("select")[0];
+            data.append(first_select.value, 'm');
+
+        }
+
+        csrftoken = getCookie('csrftoken');
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                body[0].style.backgroundColor = 'white';
+                var image = document.getElementById("image_final");
+                image.src = image.src + '1';
+            }
+        };
+        xhttp.open("POST", "./work", true);
+
+        xhttp.setRequestHeader('X-CSRFToken', csrftoken)
+        xhttp.send(data);
+    }
+
+    function insertAfter(newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+
+    function getCookie(name) {
+        var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return v ? v[2] : null;
+    }
+
+    insertFirstBlock();
+    uploadImage();
+    redraw();
+    validateButtons();
+
+</script>
+<style>
+    .edit_block {
+        background-color: aquamarine;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 5px;
+        float: left;
+
+    }
+</style>
 </body>
 </html>
