@@ -74,7 +74,7 @@ def saveImage(imgToWrite):
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
-    cv2.imwrite('./MysakBP/static/final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
+    cv2.imwrite('./static/final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
 
 
 def work(request):
