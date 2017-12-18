@@ -54,11 +54,13 @@ def uploadImage(request):
             img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
 
             cv2.imwrite('./static/original.png', img)
+    else:
+        return HttpResponse('Nenahráno' + os.getcwd())
 
     ali = os.getcwd();
 
 
-    return HttpResponse('Nahráno' + os.path.dirname(os.path.abspath(__file__)))
+    return HttpResponse('Nahráno' + os.getcwd())
 
 
 def count(request, question_id):
