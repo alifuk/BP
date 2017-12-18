@@ -4,8 +4,8 @@
     <list default="true" id="342d16b3-8b47-4cbe-98fc-a963d4e09381" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/static/final.png" afterPath="$PROJECT_DIR$/MysakBP/static/final.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/static/original.png" afterPath="$PROJECT_DIR$/MysakBP/static/original.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bakalarka/urls.py" afterPath="$PROJECT_DIR$/Bakalarka/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/templates/index.html" afterPath="$PROJECT_DIR$/MysakBP/templates/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/views.py" afterPath="$PROJECT_DIR$/MysakBP/views.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,11 +19,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MysakBP/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
-              <caret line="102" column="35" lean-forward="false" selection-start-line="102" selection-start-column="35" selection-end-line="102" selection-end-column="35" />
+            <state relative-caret-position="416">
+              <caret line="56" column="34" lean-forward="false" selection-start-line="56" selection-start-column="34" selection-end-line="56" selection-end-column="34" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -41,11 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MysakBP/templates/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="106" column="20" lean-forward="false" selection-start-line="106" selection-start-column="20" selection-end-line="106" selection-end-column="20" />
+            <state relative-caret-position="-17">
+              <caret line="32" column="39" lean-forward="false" selection-start-line="32" selection-start-column="39" selection-end-line="32" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -68,9 +68,9 @@
         <option value="$PROJECT_DIR$/Bakalarka/settings.py" />
         <option value="$PROJECT_DIR$/Bakalarka/wsgi.py" />
         <option value="$PROJECT_DIR$/MysakBP/local_settings.py" />
-        <option value="$PROJECT_DIR$/MysakBP/views.py" />
         <option value="$PROJECT_DIR$/Bakalarka/urls.py" />
         <option value="$PROJECT_DIR$/MysakBP/templates/index.html" />
+        <option value="$PROJECT_DIR$/MysakBP/views.py" />
       </list>
     </option>
   </component>
@@ -278,21 +278,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MysakBP/views.py">
+    <entry file="file://$PROJECT_DIR$/MysakBP/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="102" column="35" lean-forward="false" selection-start-line="102" selection-start-column="35" selection-end-line="102" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-17">
+          <caret line="32" column="39" lean-forward="false" selection-start-line="32" selection-start-column="39" selection-end-line="32" selection-end-column="39" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MysakBP/templates/index.html">
+    <entry file="file://$PROJECT_DIR$/MysakBP/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="106" column="20" lean-forward="false" selection-start-line="106" selection-start-column="20" selection-end-line="106" selection-end-column="20" />
-          <folding />
+        <state relative-caret-position="416">
+          <caret line="56" column="34" lean-forward="false" selection-start-line="56" selection-start-column="34" selection-end-line="56" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

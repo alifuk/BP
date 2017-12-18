@@ -45,6 +45,18 @@ def filter_smooth(img):
     kernel = np.ones((10, 10), np.float32) / 100
     return cv2.filter2D(img, -1, kernel)
 
+
+def detection_corner(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    corners = cv2.goodFeaturesToTrack(gray, 25, 0.01, 10)
+    corners = np.int0(corners)
+
+    for i in corners:
+        x, y = i.ravel()
+        cv2.circle(img, (x, y), 15, 255, -1)
+    return img
+
 def uploadImage(request):
     if request.method == "POST":
         if request.FILES['fileToUpload']:
@@ -97,6 +109,9 @@ def work(request):
 
         if key == 'filter_smooth':
             img = filter_smooth(img)
+
+        if key == 'detection_corner':
+            img = detection_corner(img)
 
 
     saveImage(img)
