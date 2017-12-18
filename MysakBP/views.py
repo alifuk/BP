@@ -53,11 +53,10 @@ def uploadImage(request):
 
             img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
 
-
+            cv2.imwrite('BP/MysakBP/static/original.png', img)
             try:
                 cv2.imwrite('./static/original.png', img)
             except:
-
                 return HttpResponse('EEENenahráno' + os.getcwd())
                 cv2.imwrite('BP/MysakBP/static/original.png', img)
     else:
