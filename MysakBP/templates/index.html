@@ -97,7 +97,7 @@
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    alert(xhttp.responseText);
+                    //alert(xhttp.responseText);
                     var image = document.getElementById("image_original");
                     image.src = image.src + '1';
                     redraw();
@@ -130,7 +130,7 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                alert(xhttp.responseText);
+                //alert(xhttp.responseText);
                 body[0].style.backgroundColor = 'white';
                 var image = document.getElementById("image_final");
                 image.src = image.src + '1';
