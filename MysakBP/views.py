@@ -100,7 +100,7 @@ def work(request):
 
 
     saveImage(img)
-    return HttpResponse('ok')
+    return HttpResponse(os.getcwd())
 
 
 def layout(request):
