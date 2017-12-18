@@ -53,7 +53,7 @@ def uploadImage(request):
 
             img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
 
-            cv2.imwrite('./MysakBP/static/original.png', img)
+            cv2.imwrite('./static/original.png', img)
 
     ali = os.getcwd();
 
@@ -66,7 +66,7 @@ def count(request, question_id):
 
 
 def loadImage():
-    return cv2.cvtColor(cv2.imread('MysakBP/static/original.png', -1), cv2.COLOR_BGR2HSV)
+    return cv2.cvtColor(cv2.imread('./static/original.png', -1), cv2.COLOR_BGR2HSV)
 
 
 def saveImage(imgToWrite):
