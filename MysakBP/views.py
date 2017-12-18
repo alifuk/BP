@@ -8,6 +8,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 
 import numpy as np
 import cv2
+import MysakBP.local_settings
 
 
 def color_bw(img):
@@ -53,17 +54,11 @@ def uploadImage(request):
 
             img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
 
-            cv2.imwrite('BP/MysakBP/static/original.png', img)
-            try:
-                cv2.imwrite('./static/original.png', img)
-            except:
-                return HttpResponse('EEENenahráno' + os.getcwd())
-                cv2.imwrite('BP/MysakBP/static/original.png', img)
+            cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'original.png', img)
     else:
         return HttpResponse('Nenahráno' + os.getcwd())
 
     ali = os.getcwd()
-
 
     return HttpResponse('Nahráno' + os.getcwd())
 
@@ -73,10 +68,7 @@ def count(request, question_id):
 
 
 def loadImage():
-    try:
-        return cv2.cvtColor(cv2.imread('./static/original.png', -1), cv2.COLOR_BGR2HSV)
-    except:
-        return cv2.cvtColor(cv2.imread('./BP/MysakBP/static/original.png', -1), cv2.COLOR_BGR2HSV)
+    return cv2.cvtColor(cv2.imread(MysakBP.local_settings.STATIC_PATH + 'original.png', -1), cv2.COLOR_BGR2HSV)
 
 
 def saveImage(imgToWrite):
@@ -84,7 +76,7 @@ def saveImage(imgToWrite):
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
-    cv2.imwrite('./static/final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
+    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
 
 
 def work(request):
