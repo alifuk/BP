@@ -57,7 +57,7 @@ def uploadImage(request):
             try:
                 cv2.imwrite('./static/original.png', img)
             except:
-                cv2.imwrite('./BP/MysakBP/static/original.png', img)
+                cv2.imwrite('BP/MysakBP/static/original.png', img)
     else:
         return HttpResponse('Nenahráno' + os.getcwd())
 
