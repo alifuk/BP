@@ -80,6 +80,7 @@ def count(request, question_id):
 
 
 def loadImage():
+    #return cv2.imread(MysakBP.local_settings.STATIC_PATH + 'original.png', -1);
     return cv2.cvtColor(cv2.imread(MysakBP.local_settings.STATIC_PATH + 'original.png', -1), cv2.COLOR_BGR2HSV)
 
 
@@ -87,7 +88,7 @@ def saveImage(imgToWrite):
     # cv2.imshow('image',  cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-
+    #cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'final.png', imgToWrite)
     cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
 
 

@@ -23,14 +23,15 @@
 
 
 <div id="edit_block_pattern" style="display: none;">
-    <select onchange="redraw(); checkForValidButtons(this);">
-        <option value="none">Zvolte operaci</option>
-        <option value="color_bw">Udělat černobílé</option>
-        <option value="color_blue">Ponechat pouze modrou</option>
-        <option value="transform_rotate">Otočit obraz</option>
-        <option value="transform_crop">Oříznout obraz</option>
-        <option value="filter_smooth">Vyhladit obraz</option>
-        <option value="detection_corner">Detekce hran</option>
+    <select onchange="validateSelects(this); categoryFill(this);">
+        <option value="none">Zvolte kategorii operace</option>
+        <option value="color">Barvy</option>
+        <option value="transform">Transformace</option>
+        <option value="filter">Filtry</option>
+        <option value="detection">Detekce</option>
+    </select><br>
+    <select onchange="redraw();" style="visibility: hidden;">
+        <option value="none">Kappa pride</option>
     </select>
 
     <button onclick="addBlock(this)">+</button>
@@ -38,16 +39,59 @@
 </div>
 
 <script>
+    var category = {};
+
+    function initCategoryObject() {
+
+        var color_bw = {};
+        color_bw.name = 'Convert to grayscale';
+        color_bw.short = 'bw';
+
+        var color_blue = {};
+        color_blue.name = 'Filter blue color';
+        color_blue.short = 'blue';
+
+        var transform_rotate = {};
+        transform_rotate.name = 'Rotation';
+        transform_rotate.short = 'rotate';
+
+        var filter_smooth = {
+            'name':'Vyhlazení',
+            'short':'smooth'
+        };
+
+        var detection_corner = {
+            'name':'Detekce hran',
+            'short':'corner'
+        };
+
+
+        category.color = [color_bw, color_blue];
+        category.transform = [transform_rotate];
+        category.filter = [filter_smooth];
+        category.detection = [detection_corner];
+    }
+
+    function validateSelects(sender) {
+        var sender_block = sender.parentNode;
+        selects = sender_block.getElementsByTagName('select');
+        if(selects[0].value == 'none'){
+            selects[1].style.visibility = 'hidden';
+        } else {
+            selects[1].style.visibility = 'visible';
+        }
+    }
+
     function validateButtons() {
         var delete_buttons = document.getElementsByClassName('delete_button');
-        if(delete_buttons.length == 2){
+        if (delete_buttons.length == 2) {
             delete_buttons[0].disabled = true;
-        } else{
+        } else {
             delete_buttons[0].disabled = false;
         }
     }
-    
-    function deleteBlock(sender){
+
+    function deleteBlock(sender) {
         var sender_block = sender.parentNode;
         var sender_block_parent = sender_block.parentNode;
         sender_block_parent.removeChild(sender_block);
@@ -79,17 +123,26 @@
     }
 
 
-
-    function checkForValidButtons(e) {
-        console.log('pride');
+    function categoryFill(e) {
         var parent = e.parentNode;
-        console.log(e);
+        var selects = parent.getElementsByTagName('select');
+        selects[1].innerHTML = '';
 
-        var x = document.getElementsByClassName("edit_block");
-        console.log(x.length);
+        var none_option = new Option();
+        none_option.text = 'Zvolte operaci';
+        none_option.value = 'none';
+        selects[1].appendChild(none_option);
+
+        for (var i in category[selects[0].value]) {
+            var generated_option = new Option();
+            generated_option.text = category[selects[0].value][i].name;
+            generated_option.value = category[selects[0].value][i].short;
+            selects[1].appendChild(generated_option)
+        }
+
     }
 
-    function uploadImage() {
+    function initUploadImage() {
 
         var upload_form = document.getElementById("uploader");
 
@@ -121,7 +174,6 @@
     }
 
 
-
     function redraw() {
         var body = document.getElementsByTagName('body');
         body[0].style.backgroundColor = 'blue';
@@ -130,10 +182,11 @@
         var data = new FormData();
         for (i = 0; i < edit_blocks.length; i++) {
             var first_select = edit_blocks[i].getElementsByTagName("select")[0];
-            data.append(first_select.value, 'm');
-
+            var second_select = edit_blocks[i].getElementsByTagName("select")[1];
+            data.append(first_select.value+"_"+second_select.value, 'm');
+            console.log(first_select.value+"_"+second_select.value);
         }
-
+        console.log(data);
         csrftoken = getCookie('csrftoken');
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -159,10 +212,12 @@
         return v ? v[2] : null;
     }
 
+
     insertFirstBlock();
-    uploadImage();
+    initUploadImage();
     redraw();
     validateButtons();
+    initCategoryObject();
 
 </script>
 <style>
