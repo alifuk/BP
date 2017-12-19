@@ -4,8 +4,8 @@ from django.conf import settings
 import time
 import os
 from django.shortcuts import render
-from django.contrib.staticfiles.storage import staticfiles_storage
 
+import json
 import numpy as np
 import cv2
 import MysakBP.local_settings
@@ -28,10 +28,10 @@ def color_blue(img):
     return img
 
 
-def transform_rotate(img):
+def transform_rotate(img,angle):
     rows, cols, channels = img.shape
 
-    M = cv2.getRotationMatrix2D((cols / 2, rows / 2), 90, 1)
+    M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
     dst = cv2.warpAffine(img, M, (cols, rows))
 
     return dst
@@ -41,8 +41,8 @@ def transform_crop(img):
     return cv2.resize(img, None, fx=4, fy=2, interpolation=cv2.INTER_CUBIC)
 
 
-def filter_smooth(img):
-    kernel = np.ones((10, 10), np.float32) / 100
+def filter_smooth(img,p_count_vertical, p_count_horizontal):
+    kernel = np.ones((p_count_horizontal, p_count_vertical), np.float32) / (p_count_horizontal * p_count_vertical)
     return cv2.filter2D(img, -1, kernel)
 
 
@@ -94,24 +94,28 @@ def saveImage(imgToWrite):
 
 def work(request):
     img = loadImage()
-    for key, value in request.POST.items():
 
-        if key == 'color_bw':
+    python_obj = json.loads(request.body)
+
+
+    for arr_of_definition in python_obj:
+
+        if arr_of_definition[0] == 'color_bw':
             img = color_bw(img)
 
-        if key == 'color_blue':
+        if arr_of_definition[0] == 'color_blue':
             img = color_blue(img)
 
-        if key == 'transform_rotate':
-            img = transform_rotate(img)
+        if arr_of_definition[0] == 'transform_rotate':
+            img = transform_rotate(img, int(arr_of_definition[1]))
 
-        if key == 'transform_crop':
+        if arr_of_definition[0] == 'transform_crop':
             img = transform_crop(img)
 
-        if key == 'filter_smooth':
-            img = filter_smooth(img)
+        if arr_of_definition[0] == 'filter_smooth':
+            img = filter_smooth(img, int(arr_of_definition[1]), int(arr_of_definition[2]))
 
-        if key == 'detection_corner':
+        if arr_of_definition[0] == 'detection_corner':
             img = detection_corner(img)
 
 
@@ -334,3 +338,20 @@ def show():
     cv02.imshow('Image', bgr)
     cv02.waitKey(0)
     return True
+
+def bozkov():
+    import cv2
+    import numpy as np
+
+    img_rgb = cv2.imread('bozkov_source.jpg')
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    template = cv2.imread('bozkov_pattern.jpg', 0)
+    w, h = template.shape[::-1]
+
+    res = cv2.matchTemplate(img_gray, template, cv2.TM_SQDIFF_NORMED)
+    threshold = 0.4
+    loc = np.where(res <= threshold)
+    for pt in zip(*loc[::-1]):
+        cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+
+    cv2.imwrite('res.png', img_rgb)

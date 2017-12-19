@@ -30,10 +30,10 @@
         <option value="filter">Filtry</option>
         <option value="detection">Detekce</option>
     </select><br>
-    <select onchange="redraw();" style="visibility: hidden;">
+    <select onchange="generate_params_form(this);redraw();" style="visibility: hidden;">
         <option value="none">Kappa pride</option>
     </select>
-
+    <div class="params"></div>
     <button onclick="addBlock(this)">+</button>
     <button class="delete_button" onclick="deleteBlock(this)">X</button>
 </div>
@@ -43,39 +43,92 @@
 
     function initCategoryObject() {
 
-        var color_bw = {};
-        color_bw.name = 'Convert to grayscale';
-        color_bw.short = 'bw';
+        var color_bw = {
+            'name': 'Konvertovat do stupňů šedi',
+            'short': 'bw'
+        };
 
-        var color_blue = {};
-        color_blue.name = 'Filter blue color';
-        color_blue.short = 'blue';
+        var color_blue = {
+            'name': 'Filter blue color',
+            'short': 'blue',
 
-        var transform_rotate = {};
-        transform_rotate.name = 'Rotation';
-        transform_rotate.short = 'rotate';
+        };
 
+        var transform_rotate = {
+            'name': 'Otáčeníčko',
+            'short': 'rotate',
+            'params': [
+                {
+                    'type': 'text',
+                    'default': '90',
+                    'label': 'Rotace o počet stupňů',
+                    'name': 'degrees'
+
+                }
+            ]
+        };
         var filter_smooth = {
-            'name':'Vyhlazení',
-            'short':'smooth'
+            'name': 'Vyhlazení',
+            'short': 'smooth',
+            'params': [
+                {
+                    'type': 'text',
+                    'default': '5',
+                    'label': 'Počet vyhlazovacích pixelů horizontálně',
+                    'name': 'pixel_count_horizontal'
+
+                },
+                {
+                    'type': 'text',
+                    'default': '5',
+                    'label': 'Počet vyhlazovacích pixelů vertikálně',
+                    'name': 'pixel_count_vertical'
+
+                }
+            ]
         };
 
         var detection_corner = {
-            'name':'Detekce hran',
-            'short':'corner'
+            'name': 'Detekce hran',
+            'short': 'corner'
         };
 
 
         category.color = [color_bw, color_blue];
-        category.transform = [transform_rotate];
-        category.filter = [filter_smooth];
+        category.transform = {'rotate': transform_rotate};
+        category.filter = {'smooth': filter_smooth};
         category.detection = [detection_corner];
+    }
+
+    function generate_params_form(sender) {
+        var sender_block = sender.parentNode;
+        selects = sender_block.getElementsByTagName('select');
+        params_block = sender_block.getElementsByClassName('params')[0];
+        params_block.innerHTML = '';
+        operation = category[selects[0].value][selects[1].value];
+        if (typeof operation !== 'undefined' && operation !== null) {
+            for (var i in operation.params) {
+                if (operation.params[i].type == 'text') {
+                    var param_text = document.createElement("INPUT");
+                    param_text.setAttribute('class', operation.params[i].name);
+                    param_text.setAttribute('value', operation.params[i].default);
+                    param_text.setAttribute('onchange', 'redraw();');
+                    var label = document.createElement("p");
+                    label.innerText = operation.params[i].label;
+                    params_block.appendChild(label);
+                    params_block.appendChild(param_text);
+
+                }
+            }
+        }
+
+
     }
 
     function validateSelects(sender) {
         var sender_block = sender.parentNode;
         selects = sender_block.getElementsByTagName('select');
-        if(selects[0].value == 'none'){
+        if (selects[0].value == 'none') {
             selects[1].style.visibility = 'hidden';
         } else {
             selects[1].style.visibility = 'visible';
@@ -126,6 +179,7 @@
     function categoryFill(e) {
         var parent = e.parentNode;
         var selects = parent.getElementsByTagName('select');
+        parent.getElementsByClassName('params')[0].innerHTML = '';
         selects[1].innerHTML = '';
 
         var none_option = new Option();
@@ -179,12 +233,21 @@
         body[0].style.backgroundColor = 'blue';
         var edit_blocks = document.getElementsByClassName('edit_block');
 
-        var data = new FormData();
+        var data = [];
         for (i = 0; i < edit_blocks.length; i++) {
             var first_select = edit_blocks[i].getElementsByTagName("select")[0];
             var second_select = edit_blocks[i].getElementsByTagName("select")[1];
-            data.append(first_select.value+"_"+second_select.value, 'm');
-            console.log(first_select.value+"_"+second_select.value);
+            var params_div = edit_blocks[i].getElementsByClassName('params')[0];
+            var inputs = params_div.getElementsByTagName('input');
+            var index_of_this_data_block = data.length;
+            data[index_of_this_data_block] = [first_select.value + "_" + second_select.value];
+
+            for (var input_index = 0; input_index < inputs.length; input_index++) {
+                data[index_of_this_data_block].push(inputs[input_index].value);
+            }
+
+
+            /* console.log(first_select.value+"_"+second_select.value); */
         }
         console.log(data);
         csrftoken = getCookie('csrftoken');
@@ -200,7 +263,8 @@
         xhttp.open("POST", "./work", true);
 
         xhttp.setRequestHeader('X-CSRFToken', csrftoken)
-        xhttp.send(data);
+        xhttp.send(JSON.stringify(data));
+        console.log(JSON.stringify(data));
     }
 
     function insertAfter(newNode, referenceNode) {
@@ -228,6 +292,9 @@
         padding: 5px;
         float: left;
 
+    }
+    p{
+        margin: 0;
     }
 </style>
 </body>
