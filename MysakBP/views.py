@@ -1,61 +1,29 @@
-from multiprocessing import context
 from django.http import HttpResponse
-from django.conf import settings
-import time
 import os
 from django.shortcuts import render
+import importlib
 
 import json
 import numpy as np
 import cv2
+import time
+
 import MysakBP.local_settings
 
+operation_files = {}
+def find_files():
+    start = time.time()
+    for file in os.listdir('./MysakBP/Model/operations'):
 
-def color_bw(img):
-    for y in range(0, img.__len__()):
-        for x in range(0, img[0].__len__()):
-            img[y][x][1] = 0
+        print(file)
+        name = os.path.splitext(os.path.basename(file))[0]
+        # add package prefix to name, if required
+        operation_files[name] = importlib.import_module('MysakBP.Model.operations.'+ name)
 
-    return img
-
-
-def color_blue(img):
-    for y in range(0, img.__len__()):
-        for x in range(0, img[0].__len__()):
-            if img[y][x][0] < 100 or img[y][x][0] > 150:
-                img[y][x][1] = 0
-
-    return img
+    end = time.time()
+    print(end - start)
 
 
-def transform_rotate(img,angle):
-    rows, cols, channels = img.shape
-
-    M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
-    dst = cv2.warpAffine(img, M, (cols, rows))
-
-    return dst
-
-
-def transform_crop(img):
-    return cv2.resize(img, None, fx=4, fy=2, interpolation=cv2.INTER_CUBIC)
-
-
-def filter_smooth(img,p_count_vertical, p_count_horizontal):
-    kernel = np.ones((p_count_horizontal, p_count_vertical), np.float32) / (p_count_horizontal * p_count_vertical)
-    return cv2.filter2D(img, -1, kernel)
-
-
-def detection_corner(img):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    corners = cv2.goodFeaturesToTrack(gray, 25, 0.01, 10)
-    corners = np.int0(corners)
-
-    for i in corners:
-        x, y = i.ravel()
-        cv2.circle(img, (x, y), 15, 255, -1)
-    return img
 
 def uploadImage(request):
     if request.method == "POST":
@@ -93,6 +61,7 @@ def saveImage(imgToWrite):
 
 
 def work(request):
+    find_files()
     img = loadImage()
 
     python_obj = json.loads(request.body)
@@ -100,23 +69,10 @@ def work(request):
 
     for arr_of_definition in python_obj:
 
-        if arr_of_definition[0] == 'color_bw':
-            img = color_bw(img)
+        if arr_of_definition[0] in operation_files:
+            funkce = getattr(operation_files[arr_of_definition[0]], arr_of_definition[1])
+            img = funkce(img, arr_of_definition[2:])
 
-        if arr_of_definition[0] == 'color_blue':
-            img = color_blue(img)
-
-        if arr_of_definition[0] == 'transform_rotate':
-            img = transform_rotate(img, int(arr_of_definition[1]))
-
-        if arr_of_definition[0] == 'transform_crop':
-            img = transform_crop(img)
-
-        if arr_of_definition[0] == 'filter_smooth':
-            img = filter_smooth(img, int(arr_of_definition[1]), int(arr_of_definition[2]))
-
-        if arr_of_definition[0] == 'detection_corner':
-            img = detection_corner(img)
 
 
     saveImage(img)
@@ -355,3 +311,4 @@ def bozkov():
         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
 
     cv2.imwrite('res.png', img_rgb)
+

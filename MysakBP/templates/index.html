@@ -67,6 +67,11 @@
                 }
             ]
         };
+        var transform_crop = {
+            'name': 'Ořez',
+            'short': 'crop'
+
+        };
         var filter_smooth = {
             'name': 'Vyhlazení',
             'short': 'smooth',
@@ -90,14 +95,37 @@
 
         var detection_corner = {
             'name': 'Detekce hran',
-            'short': 'corner'
+            'short': 'corner',
+            'params': [
+                {
+                    'type': 'text',
+                    'default': '10',
+                    'label': 'Maximální počet hran k nalezení',
+                    'name': 'corner_count'
+
+                },
+                {
+                    'type': 'text',
+                    'default': '0.01',
+                    'label': 'Treshold',
+                    'name': 'treshold'
+
+                },
+                {
+                    'type': 'text',
+                    'default': '10',
+                    'label': 'Minimální vzdálenost hran',
+                    'name': 'minimum_distance'
+
+                }
+            ]
         };
 
 
         category.color = [color_bw, color_blue];
-        category.transform = {'rotate': transform_rotate};
+        category.transform = {'rotate': transform_rotate, 'crop': transform_crop};
         category.filter = {'smooth': filter_smooth};
-        category.detection = [detection_corner];
+        category.detection = {'corner': detection_corner};
     }
 
     function generate_params_form(sender) {
@@ -240,7 +268,7 @@
             var params_div = edit_blocks[i].getElementsByClassName('params')[0];
             var inputs = params_div.getElementsByTagName('input');
             var index_of_this_data_block = data.length;
-            data[index_of_this_data_block] = [first_select.value + "_" + second_select.value];
+            data[index_of_this_data_block] = [first_select.value, second_select.value];
 
             for (var input_index = 0; input_index < inputs.length; input_index++) {
                 data[index_of_this_data_block].push(inputs[input_index].value);
