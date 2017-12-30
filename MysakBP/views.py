@@ -13,12 +13,12 @@ import MysakBP.local_settings
 operation_files = {}
 def find_files():
     start = time.time()
-    for file in os.listdir('./MysakBP/Model/operations'):
+    for file in os.listdir(MysakBP.local_settings.OPERATIONS_PATH):
 
         print(file)
         name = os.path.splitext(os.path.basename(file))[0]
         # add package prefix to name, if required
-        operation_files[name] = importlib.import_module('MysakBP.Model.operations.'+ name)
+        operation_files[name] = importlib.import_module(MysakBP.local_settings.OPERATIONS_PATH_MODULE + name)
 
     end = time.time()
     print(end - start)
