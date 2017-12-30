@@ -49,8 +49,11 @@ def count(request, question_id):
 
 def loadImage():
     #return cv2.imread(MysakBP.local_settings.STATIC_PATH + 'original.png', -1);
-    return cv2.cvtColor(cv2.imread(MysakBP.local_settings.STATIC_PATH + 'original.png', -1), cv2.COLOR_BGR2HSV)
-
+    img = cv2.imread(MysakBP.local_settings.STATIC_PATH + 'original.png', -1)
+    if str(img) != 'None':
+        return cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    else:
+        return np.zeros((10, 10, 3), np.uint8)
 
 def saveImage(imgToWrite):
     # cv2.imshow('image',  cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
