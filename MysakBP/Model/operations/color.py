@@ -8,6 +8,7 @@ def bw(img, params):
     return img
 
 
+
 def blue(img, params):
     for y in range(0, img.__len__()):
         for x in range(0, img[0].__len__()):
