@@ -25,6 +25,7 @@
 <div id="edit_block_pattern" style="display: none;">
     <select onchange="validateSelects(this); categoryFill(this);">
         <option value="none">Zvolte kategorii operace</option>
+        <option value="files">Soubory</option>
         <option value="color">Barvy</option>
         <option value="transform">Transformace</option>
         <option value="filter">Filtry</option>
@@ -42,6 +43,34 @@
     var category = {};
 
     function initCategoryObject() {
+        var files_load = {
+            'name': 'Načíst soubor',
+            'short': 'load',
+            'params': [
+                {
+                    'type': 'text',
+                    'default': '',
+                    'label': 'Název souboru',
+                    'name': 'filename'
+
+                }
+            ]
+        };
+
+        var files_save = {
+            'name': 'Uložit soubor',
+            'short': 'save',
+            'params': [
+                {
+                    'type': 'text',
+                    'default': '',
+                    'label': 'Název souboru',
+                    'name': 'filename'
+
+                }
+            ]
+        };
+
 
         var color_bw = {
             'name': 'Konvertovat do stupňů šedi',
@@ -49,13 +78,35 @@
         };
 
         var color_blue = {
-            'name': 'Filter blue color',
-            'short': 'blue',
+            'name': 'Filtrovat rozsah spektra',
+            'short': 'fcr',
+
+        };
+
+        var color_convert = {
+            'name': 'Konvertovat do barevného prostoru',
+            'short': 'convert',
+            'params': [
+                {
+                    'type': 'select',
+                    'label': 'Původní barevný prostor',
+                    'name': 'from',
+                    'options_list': ['GRAY','BGR','HSV']
+
+                },
+                {
+                    'type': 'select',
+                    'label': 'Cílový barevný prostor',
+                    'name': 'to',
+                    'options_list': ['GRAY','BGR','HSV']
+
+                }
+            ]
 
         };
 
         var transform_rotate = {
-            'name': 'Otáčeníčko',
+            'name': 'Otočení',
             'short': 'rotate',
             'params': [
                 {
@@ -121,8 +172,8 @@
             ]
         };
 
-
-        category.color = [color_bw, color_blue];
+        category.files = {'load': files_load, 'save': files_save};
+        category.color = {'gray': color_bw, 'filter': color_blue, 'convert': color_convert};
         category.transform = {'rotate': transform_rotate, 'crop': transform_crop};
         category.filter = {'smooth': filter_smooth};
         category.detection = {'corner': detection_corner};
@@ -136,13 +187,33 @@
         operation = category[selects[0].value][selects[1].value];
         if (typeof operation !== 'undefined' && operation !== null) {
             for (var i in operation.params) {
-                if (operation.params[i].type == 'text') {
+                if (operation.params[i].type === 'text') {
                     var param_text = document.createElement("INPUT");
                     param_text.setAttribute('class', operation.params[i].name);
                     param_text.setAttribute('value', operation.params[i].default);
                     param_text.setAttribute('onchange', 'redraw();');
                     var label = document.createElement("p");
                     label.innerText = operation.params[i].label;
+                    params_block.appendChild(label);
+                    params_block.appendChild(param_text);
+
+                }
+                if (operation.params[i].type === 'select') {
+
+                    var param_text = document.createElement("SELECT");
+                    param_text.setAttribute('class', operation.params[i].name);
+                    param_text.setAttribute('onchange', 'redraw();');
+                    var label = document.createElement("p");
+                    label.innerText = operation.params[i].label;
+
+                    for (var option_name in operation.params[i].options_list){
+
+                        var option = document.createElement("OPTION");
+                        option.value = operation.params[i].options_list[option_name];
+                        option.text = operation.params[i].options_list[option_name];
+                        param_text.appendChild(option);
+                    }
+
                     params_block.appendChild(label);
                     params_block.appendChild(param_text);
 
@@ -156,7 +227,7 @@
     function validateSelects(sender) {
         var sender_block = sender.parentNode;
         selects = sender_block.getElementsByTagName('select');
-        if (selects[0].value == 'none') {
+        if (selects[0].value === 'none') {
             selects[1].style.visibility = 'hidden';
         } else {
             selects[1].style.visibility = 'visible';
@@ -165,7 +236,7 @@
 
     function validateButtons() {
         var delete_buttons = document.getElementsByClassName('delete_button');
-        if (delete_buttons.length == 2) {
+        if (delete_buttons.length === 2) {
             delete_buttons[0].disabled = true;
         } else {
             delete_buttons[0].disabled = false;
@@ -266,18 +337,25 @@
             var first_select = edit_blocks[i].getElementsByTagName("select")[0];
             var second_select = edit_blocks[i].getElementsByTagName("select")[1];
             var params_div = edit_blocks[i].getElementsByClassName('params')[0];
+
+
             var inputs = params_div.getElementsByTagName('input');
+            var selects = params_div.getElementsByTagName('select');
+
             var index_of_this_data_block = data.length;
             data[index_of_this_data_block] = [first_select.value, second_select.value];
 
             for (var input_index = 0; input_index < inputs.length; input_index++) {
                 data[index_of_this_data_block].push(inputs[input_index].value);
             }
+            for (var select_index = 0; select_index < selects.length; select_index++) {
+                data[index_of_this_data_block].push(selects[select_index].value);
+            }
 
 
             /* console.log(first_select.value+"_"+second_select.value); */
         }
-        console.log(data);
+        //console.log(data);
         csrftoken = getCookie('csrftoken');
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -292,7 +370,7 @@
 
         xhttp.setRequestHeader('X-CSRFToken', csrftoken)
         xhttp.send(JSON.stringify(data));
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
     }
 
     function insertAfter(newNode, referenceNode) {

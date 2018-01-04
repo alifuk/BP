@@ -11,34 +11,29 @@ import time
 import MysakBP.local_settings
 
 operation_files = {}
+
+
 def find_files():
     start = time.time()
     for file in os.listdir(MysakBP.local_settings.OPERATIONS_PATH):
-
-        print(file)
         name = os.path.splitext(os.path.basename(file))[0]
         # add package prefix to name, if required
         operation_files[name] = importlib.import_module(MysakBP.local_settings.OPERATIONS_PATH_MODULE + name)
 
     end = time.time()
-    print(end - start)
-
+    # print(end - start)
+    # search takes 0.04 on SSD drive
 
 
 def uploadImage(request):
     if request.method == "POST":
         if request.FILES['fileToUpload']:
-            print(request.FILES['fileToUpload'].size)
-
-            # img = request.FILES['fileToUpload']
-
             img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
-
-            cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'original.png', img)
+            image_name = request.FILES['fileToUpload'].name
+            image_name = image_name.replace('upload', '')
+            cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'upload_' + image_name, img)
     else:
         return HttpResponse('Nenahráno' + os.getcwd())
-
-    ali = os.getcwd()
 
     return HttpResponse('Nahráno' + os.getcwd())
 
@@ -47,38 +42,25 @@ def count(request, question_id):
     return HttpResponse('Eeeej' + question_id)
 
 
-def loadImage():
-    #return cv2.imread(MysakBP.local_settings.STATIC_PATH + 'original.png', -1);
-    img = cv2.imread(MysakBP.local_settings.STATIC_PATH + 'original.png', -1)
-    if str(img) != 'None':
-        return cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    else:
-        return np.zeros((10, 10, 3), np.uint8)
-
-def saveImage(imgToWrite):
-    # cv2.imshow('image',  cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-    #cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'final.png', imgToWrite)
-    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'final.png', cv2.cvtColor(imgToWrite, cv2.COLOR_HSV2BGR))
+def saveThimbnailImage(img_to_write, operation_counter):
+    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'thumb_' + str(operation_counter) + '.png', img_to_write)
 
 
 def work(request):
     find_files()
-    img = loadImage()
 
-    python_obj = json.loads(request.body)
+    img = np.zeros((10, 10, 3), np.uint8)
 
+    json_data = json.loads(request.body)
 
-    for arr_of_definition in python_obj:
+    operation_counter = 0
+    for arr_of_definition in json_data:
 
         if arr_of_definition[0] in operation_files:
-            funkce = getattr(operation_files[arr_of_definition[0]], arr_of_definition[1])
-            img = funkce(img, arr_of_definition[2:])
-
-
-
-    saveImage(img)
+            operation_pointer = getattr(operation_files[arr_of_definition[0]], arr_of_definition[1])
+            img = operation_pointer(img, arr_of_definition[2:])
+            saveThimbnailImage(img, operation_counter)
+            operation_counter += 1
     return HttpResponse(os.getcwd())
 
 
@@ -94,224 +76,3 @@ def layout(request):
 
     }
     return render(request, 'index.html', context)
-
-
-def init(request):
-    print('SDF')
-    from multiprocessing import context
-    from django.http import HttpResponse
-    from django.conf import settings
-    import time
-    import os
-    from django.shortcuts import render
-    from django.contrib.staticfiles.storage import staticfiles_storage
-
-    import numpy as np
-    import cv2
-
-    video = cv2.VideoWriter('video.avi', -1, 25, (640, 480))
-    cap = cv2.VideoCapture('cv02_hrnecek.mp4')
-    hues = []
-    track = cv2.imread('cv02_vzor_hrnecek.bmp')
-    track = cv2.cvtColor(track, cv2.COLOR_RGB2HSV)
-    for i in range(0, 255):
-        hues.append(0)
-
-    for y in range(0, track.__len__()):
-        for x in range(0, track[0].__len__()):
-            hues[track[y][x][0]] += 1
-
-    maxHue = max(hues)
-    maxHueIndex = np.argmax(hues)
-    o = 0
-    x1 = 50
-    y1 = 50
-    y2 = 400
-    x2 = 500
-    while True:
-        print('while')
-        ret, bgr = cap.read()
-        print(ret)
-        if not ret:
-            break
-
-        bgr = cv2.cvtColor(bgr, cv2.COLOR_RGB2HSV)
-
-        huesX = []
-        for i in range(0, bgr.__len__()):
-            huesX.append(0)
-
-        huesY = []
-        for i in range(0, bgr[0].__len__()):
-            huesY.append(0)
-
-        for y in range(y1 - 50, y2 + 50):
-            for x in range(x1 - 50, x2 + 50):
-                if abs(bgr[y][x][0] - maxHueIndex) < 2:
-                    huesX[y] += 1
-                    huesY[x] += 1
-
-        sumx = 0
-        sum = 0
-        for k in range(0, huesX.__len__()):
-            sumx += k * huesX[k]
-            sum += huesX[k]
-
-        maxHueY = round(sumx / sum)
-
-        sumy = 0
-        sum = 0
-        for k in range(0, huesY.__len__()):
-            sumy += k * huesY[k]
-            sum += huesY[k]
-
-        maxHueX = round(sumy / sum)
-
-        x1 = round(maxHueX - track[0].__len__() / 2)
-        y1 = round(maxHueY - track.__len__() / 2)
-        x2 = round(maxHueX + track[0].__len__() / 2)
-        y2 = round(maxHueY + track.__len__() / 2)
-
-        cv2.rectangle(bgr, (x1, y1), (x2, y2), (122, 255, 0))
-        bgr = cv2.cvtColor(bgr, cv2.COLOR_HSV2RGB)
-        o += 1
-        print(o)
-
-        video.write(bgr)
-        if o == 200:
-            break
-
-    video.release()
-    return HttpResponse('Eeeej')
-
-
-def cal():
-    import numpy as np
-    import cv2
-    mask = cv2.imread('sc1.png')
-    mask = cv2.cvtColor(mask, cv2.COLOR_RGB2HSV)
-    sc = cv2.imread('sc2.png')
-    sc = cv2.cvtColor(sc, cv2.COLOR_RGB2HSV)
-    for y in range(0, sc.__len__()):
-        for x in range(0, sc[0].__len__()):
-            sc[y][x][2] += 128 - mask[y][x][2]
-
-    sc = cv2.cvtColor(sc, cv2.COLOR_HSV2RGB)
-    cv2.imwrite('sc3.png', sc)
-
-
-def equaliz():
-    import numpy as np
-    import cv2
-    mask = cv2.imread('cv04_rentgen.bmp')
-    mask = cv2.cvtColor(mask, cv2.COLOR_RGB2HSV)
-    values = []
-    hues = []
-    for i in range(0, 255):
-        values.append(0)
-        hues.append(0)
-    for y in range(0, mask.__len__()):
-        for x in range(0, mask[0].__len__()):
-            values[mask[y][x][0]] += 1
-
-    sum = 0
-    for i in range(0, 255):
-        sum += values[i]
-
-    counter = 0
-    for i in range(0, 255):
-        counter += values[i]
-        values[i] = 255 / (mask.__len__() * mask[0].__len__()) * counter
-
-    for y in range(0, mask.__len__()):
-        for x in range(0, mask[0].__len__()):
-            mask[y][x][2] += values[mask[y][x][2]]
-
-    mask = cv2.cvtColor(mask, cv2.COLOR_HSV2RGB)
-    cv2.imwrite('sc4.png', mask)
-
-
-def rotate():
-    import numpy as np
-    import cv2
-
-    img = cv2.imread('sc2.png', 0)
-    rows, cols = img.shape
-    M = cv2.getRotationMatrix2D((cols / 2, rows / 2), 30, 1)
-    print(M)
-    dst = cv2.warpAffine(img, M, (cols, rows))
-
-    cv2.imwrite('sc4.png', dst)
-
-
-def myscale():
-    import numpy as np
-    import cv2
-    from numpy.linalg import inv
-
-    img = cv2.imread('sc5.png')
-    rows = img.__len__()
-    cols = img[0].__len__()
-    rows = rows * 1
-    cols = cols * 1
-    blank_image = np.zeros((cols, rows, 3), np.uint8)
-
-    for x in range(0, cols):
-        for y in range(0, rows):
-            a = [x, y]
-            b = [[2, 0], [0, 1.2]]
-            b = inv(b)
-            c = np.dot(a, b)
-
-            blank_image[x][y] = img[int(c[0])][int(c[1])]
-
-    cv2.imwrite('sc4.png', blank_image)
-
-
-def myrotate():
-    import numpy as np
-    import cv2
-    import math
-    from numpy.linalg import inv
-
-    img = cv2.imread('sc5.png')
-    rows = img.__len__()
-    cols = img[0].__len__()
-    rows = rows * 1
-    cols = cols * 1
-    blank_image = np.zeros((cols, rows, 3), np.uint8)
-
-    for x in range(0, cols):
-        for y in range(0, rows):
-            a = [x, y]
-            b = [[math.cos(1), -math.cos(1)], [math.sin(1), math.cos(1)]]
-            b = inv(b)
-            c = np.dot(a, b)
-            if int(c[0]) in range(0, cols) and int(c[1]) in range(0, rows):
-                blank_image[x][y] = img[int(c[0])][int(c[1])]
-
-    cv2.imwrite('sc4.png', blank_image)
-
-
-def show():
-    cv02.imshow('Image', bgr)
-    cv02.waitKey(0)
-    return True
-
-def bozkov():
-    import cv2
-    import numpy as np
-
-    img_rgb = cv2.imread('bozkov_source.jpg')
-    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    template = cv2.imread('bozkov_pattern.jpg', 0)
-    w, h = template.shape[::-1]
-
-    res = cv2.matchTemplate(img_gray, template, cv2.TM_SQDIFF_NORMED)
-    threshold = 0.4
-    loc = np.where(res <= threshold)
-    for pt in zip(*loc[::-1]):
-        cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
-
-    cv2.imwrite('res.png', img_rgb)
-
