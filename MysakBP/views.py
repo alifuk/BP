@@ -1,12 +1,19 @@
 from django.http import HttpResponse
 import os
+from os import walk
 from django.shortcuts import render
+from django.shortcuts import redirect
+
 import importlib
 
 import json
 import numpy as np
 import cv2
 import time
+import hashlib
+import random
+
+
 
 import MysakBP.local_settings
 
@@ -31,7 +38,7 @@ def uploadImage(request):
             img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
             image_name = request.FILES['fileToUpload'].name
             image_name = image_name.replace('upload', '')
-            cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'upload_' + image_name, img)
+            cv2.imwrite(MysakBP.local_settings.STATIC_PATH + request.POST['user'] + '/upload_' + image_name, img)
     else:
         return HttpResponse('Nenahráno' + os.getcwd())
 
@@ -64,7 +71,11 @@ def work(request):
     return HttpResponse(os.getcwd())
 
 
-def layout(request):
+def layout(request, user):
+    path = MysakBP.local_settings.STATIC_PATH + user
+    if not os.path.exists(path):
+        return redirect('login')
+
     dbg = []
     source_foto = ('./original.png')
     final_foto = ('./final.png')
@@ -76,3 +87,22 @@ def layout(request):
 
     }
     return render(request, 'index.html', context)
+
+def getFiles(request, user):
+    f = []
+    for (dirpath, dirnames, filenames) in walk(MysakBP.local_settings.STATIC_PATH + user):
+        f.extend(filenames)
+        break
+
+    return HttpResponse(json.dumps(f))
+
+def login(request):
+    text = str(random.random())
+    text = text.encode()
+    something_random = hashlib.sha224(text).hexdigest()
+
+    path = MysakBP.local_settings.STATIC_PATH + something_random
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    return redirect('./' + something_random)

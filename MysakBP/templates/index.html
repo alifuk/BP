@@ -7,16 +7,23 @@
 </head>
 <body>
 
-<img id="image_original" src="{% static source_foto %}?{{ time }} " style="width: 400px;">
-<img id="image_final" src="{% static final_foto %}?{{ time }} " style="width: 400px;">
+<div id='files'>
+    <form method="post" enctype="multipart/form-data" id="uploader">
+        {% csrf_token %}
+        Zvolte zdrojový obraz:<br>
+        <input type="file" name="fileToUpload" id="fileToUpload"><br>
+        <input type="hidden" name="user" id="files_upload_form_user"><br>
+    </form>
+    <button onclick="uploadImage()">Nahrát soubor</button>
+
+    <button onclick="updateFiles()">Aktualizovat soubory</button>
+
+    <div id="uploaded_images">
+
+    </div>
+</div>
 
 
-<form action="{% url 'upload_image' %}" method="post" enctype="multipart/form-data" id="uploader">
-    {% csrf_token %}
-    Zvolte zdrojový obraz:<br>
-    <input type="file" name="fileToUpload" id="fileToUpload"><br>
-    <input type="submit" value="Upload Image" name="submit">
-</form>
 <div id="block_container">
 
 </div>
@@ -40,6 +47,14 @@
 </div>
 
 <script>
+    function getCookie(name) {
+        var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return v ? v[2] : null;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+    var static_path = window.location.pathname.replace('/', '');
+    document.getElementById('files_upload_form_user').value = static_path;
     var category = {};
 
     function initCategoryObject() {
@@ -91,14 +106,14 @@
                     'type': 'select',
                     'label': 'Původní barevný prostor',
                     'name': 'from',
-                    'options_list': ['GRAY','BGR','HSV']
+                    'options_list': ['GRAY', 'BGR', 'HSV']
 
                 },
                 {
                     'type': 'select',
                     'label': 'Cílový barevný prostor',
                     'name': 'to',
-                    'options_list': ['GRAY','BGR','HSV']
+                    'options_list': ['GRAY', 'BGR', 'HSV']
 
                 }
             ]
@@ -206,7 +221,7 @@
                     var label = document.createElement("p");
                     label.innerText = operation.params[i].label;
 
-                    for (var option_name in operation.params[i].options_list){
+                    for (var option_name in operation.params[i].options_list) {
 
                         var option = document.createElement("OPTION");
                         option.value = operation.params[i].options_list[option_name];
@@ -295,35 +310,31 @@
 
     }
 
-    function initUploadImage() {
+    function uploadImage() {
 
         var upload_form = document.getElementById("uploader");
 
-        upload_form.onsubmit = function (e) {
+        var body = document.getElementsByTagName('body');
+        body[0].style.backgroundColor = 'blue';
 
-            var body = document.getElementsByTagName('body');
-            body[0].style.backgroundColor = 'blue';
+        var data = new FormData(upload_form);
+        csrftoken = getCookie('csrftoken');
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                //alert(xhttp.responseText);
 
-            var data = new FormData(upload_form);
-            csrftoken = getCookie('csrftoken');
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    //alert(xhttp.responseText);
-
-                    body[0].style.backgroundColor = 'white';
-                    var image = document.getElementById("image_original");
-                    image.src = image.src + '1';
-                    redraw();
-                }
-            };
-            xhttp.open("POST", "./upload", true);
-
-            xhttp.setRequestHeader('X-CSRFToken', csrftoken)
-            xhttp.send(data);
-
-            e.preventDefault();
+                body[0].style.backgroundColor = 'white';
+                var image = document.getElementById("image_original");
+                image.src = image.src + '1';
+                redraw();
+            }
         };
+        xhttp.open("POST", "./upload", true);
+
+        xhttp.setRequestHeader('X-CSRFToken', csrftoken)
+        xhttp.send(data);
+
     }
 
 
@@ -362,8 +373,6 @@
             if (this.readyState == 4 && this.status == 200) {
                 //alert(xhttp.responseText);
                 body[0].style.backgroundColor = 'white';
-                var image = document.getElementById("image_final");
-                image.src = image.src + '1';
             }
         };
         xhttp.open("POST", "./work", true);
@@ -377,14 +386,34 @@
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
 
-    function getCookie(name) {
-        var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return v ? v[2] : null;
+
+    function updateFiles() {
+
+        var uploaded_images_div = document.getElementById('uploaded_images');
+        uploaded_images_div.innerHTML = '';
+        var xatom = new XMLHttpRequest();
+        xatom.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var images = JSON.parse(xatom.responseText);
+                for(var img in images){
+                    var img_element = document.createElement('img');
+                    img_element.src = './static/'+ static_path +'/'+ images[img];
+                    img_element.style.width = '400px';
+                    uploaded_images_div.appendChild(img_element);
+                }
+
+
+            }
+        };
+        xatom.open("POST", "./get_files/" + static_path, true);
+
+        xatom.setRequestHeader('X-CSRFToken', csrftoken)
+        xatom.send();
+
+
     }
 
-
     insertFirstBlock();
-    initUploadImage();
     redraw();
     validateButtons();
     initCategoryObject();
@@ -399,8 +428,14 @@
         float: left;
 
     }
-    p{
+
+    p {
         margin: 0;
+    }
+
+    #files {
+        width: 30%;
+        float: right;
     }
 </style>
 </body>

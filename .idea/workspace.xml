@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="342d16b3-8b47-4cbe-98fc-a963d4e09381" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MysakBP/Model/operations/files.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MysakBP/Model/operations/match.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/Model/operations/color.py" afterPath="$PROJECT_DIR$/MysakBP/Model/operations/color.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/Model/operations/detection.py" afterPath="$PROJECT_DIR$/MysakBP/Model/operations/detection.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/templates/index.html" afterPath="$PROJECT_DIR$/MysakBP/templates/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/urls.py" afterPath="$PROJECT_DIR$/MysakBP/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/views.py" afterPath="$PROJECT_DIR$/MysakBP/views.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,10 +25,22 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MysakBP/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="45" column="109" lean-forward="false" selection-start-line="45" selection-start-column="109" selection-end-line="45" selection-end-column="109" />
+            <state relative-caret-position="329">
+              <caret line="40" column="84" lean-forward="false" selection-start-line="40" selection-start-column="84" selection-end-line="40" selection-end-column="84" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MysakBP/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="9" column="51" lean-forward="false" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="51" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -64,8 +73,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MysakBP/templates/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5967">
-              <caret line="351" column="59" lean-forward="false" selection-start-line="351" selection-start-column="59" selection-end-line="351" selection-end-column="59" />
+            <state relative-caret-position="235">
+              <caret line="374" column="56" lean-forward="false" selection-start-line="374" selection-start-column="56" selection-end-line="374" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -99,6 +108,7 @@
       <find>edit_block_pattern</find>
       <find>prepareNewBlock</find>
       <find>console</find>
+      <find>preve</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -117,10 +127,12 @@
         <option value="$PROJECT_DIR$/MysakBP/Model/operations/basic.py" />
         <option value="$PROJECT_DIR$/MysakBP/Model/operations/match.py" />
         <option value="$PROJECT_DIR$/MysakBP/Model/operations/detection.py" />
-        <option value="$PROJECT_DIR$/MysakBP/views.py" />
         <option value="$PROJECT_DIR$/MysakBP/Model/operations/files.py" />
-        <option value="$PROJECT_DIR$/MysakBP/templates/index.html" />
         <option value="$PROJECT_DIR$/MysakBP/Model/operations/color.py" />
+        <option value="$PROJECT_DIR$/MysakBP/templates/front_page.html" />
+        <option value="$PROJECT_DIR$/MysakBP/urls.py" />
+        <option value="$PROJECT_DIR$/MysakBP/views.py" />
+        <option value="$PROJECT_DIR$/MysakBP/templates/index.html" />
       </list>
     </option>
   </component>
@@ -131,10 +143,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="478" />
-    <option name="y" value="-15" />
+    <option name="x" value="570" />
+    <option name="y" value="-16" />
     <option name="width" value="933" />
-    <option name="height" value="1087" />
+    <option name="height" value="735" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -163,6 +175,11 @@
             <path>
               <item name="Bakalarka" type="b2602c69:ProjectViewProjectNode" />
               <item name="Bakalarka" type="462c0819:PsiDirectoryNode" />
+              <item name="Bakalarka" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Bakalarka" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Bakalarka" type="462c0819:PsiDirectoryNode" />
               <item name="MysakBP" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -178,6 +195,12 @@
               <item name="Model" type="462c0819:PsiDirectoryNode" />
               <item name="operations" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Bakalarka" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Bakalarka" type="462c0819:PsiDirectoryNode" />
+              <item name="MysakBP" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -191,6 +214,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Ali\ownCloud\Projekty\Bakalarka\MysakBP\templates" />
       <recent name="C:\Users\Ali\ownCloud\Projekty\Bakalarka\MysakBP\Model\operations" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -312,23 +336,16 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="19" />
+      <option name="time" value="21" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Python.DjangoServer">
         <watch expression="request.FILES['fileToUpload'].name" language="Python" />
+        <watch expression="request.POST['user']" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Bakalarka/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="20" column="19" lean-forward="false" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Downloads/cv02-init.py" />
     <entry file="file://$PROJECT_DIR$/MysakBP/views.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -591,22 +608,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Bakalarka/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MysakBP/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MysakBP/Model/operations.py" />
     <entry file="file://$PROJECT_DIR$/MysakBP/Model/operations/__init__.py" />
     <entry file="file://C:/Program Files (x86)/Python36-32/Lib/site-packages/django/utils/autoreload.py">
@@ -658,12 +659,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MysakBP/Model/operations/files.py">
+    <entry file="file://$PROJECT_DIR$/MysakBP/Model/operations/color.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+        <state relative-caret-position="612">
+          <caret line="36" column="12" lean-forward="false" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Bakalarka/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MysakBP/templates/front_page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="21" lean-forward="false" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MysakBP/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="51" lean-forward="false" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="51" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -678,18 +703,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MysakBP/Model/operations/color.py">
+    <entry file="file://$PROJECT_DIR$/MysakBP/Model/operations/files.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="36" column="12" lean-forward="false" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="12" />
-          <folding />
+        <state relative-caret-position="408">
+          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MysakBP/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="45" column="109" lean-forward="false" selection-start-line="45" selection-start-column="109" selection-end-line="45" selection-end-column="109" />
+        <state relative-caret-position="329">
+          <caret line="40" column="84" lean-forward="false" selection-start-line="40" selection-start-column="84" selection-end-line="40" selection-end-column="84" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
           </folding>
@@ -698,8 +725,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MysakBP/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5967">
-          <caret line="351" column="59" lean-forward="false" selection-start-line="351" selection-start-column="59" selection-end-line="351" selection-end-column="59" />
+        <state relative-caret-position="235">
+          <caret line="374" column="56" lean-forward="false" selection-start-line="374" selection-start-column="56" selection-end-line="374" selection-end-column="56" />
           <folding />
         </state>
       </provider>
