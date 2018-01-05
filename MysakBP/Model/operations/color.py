@@ -1,10 +1,10 @@
+"""Barvy"""
 import cv2
+import MysakBP.Model.Alvalidator as av
 
 
 def bw(img, params):
-    '''
-        To grayscale
-        '''
+    """Konverze do černobílé"""
     for y in range(0, img.__len__()):
         for x in range(0, img[0].__len__()):
             img[y][x][1] = 0
@@ -13,9 +13,7 @@ def bw(img, params):
 
 
 def fcr(img, params):
-    '''
-    Filter color range
-    '''
+    """Filtrace barevného rozsahu"""
     for y in range(0, img.__len__()):
         for x in range(0, img[0].__len__()):
             if img[y][x][0] < 100 or img[y][x][0] > 150:
@@ -25,9 +23,13 @@ def fcr(img, params):
 
 
 def convert(img, params):
-    print('begin')
-    colorspace_from = params[0]
-    colorspace_to = params[1]
+    """Změna barevného prostoru"""
+    validator = av.Alvalidator()
+    colorspace_from = validator.string_validate(params[0])
+    colorspace_to = validator.string_validate(params[1])
+    if validator.evaluate() is False:
+        return validator.message
+
     try:
         conversion_name = getattr(cv2, 'COLOR_' + colorspace_from + '2' + colorspace_to)
         img = cv2.cvtColor(img, conversion_name)

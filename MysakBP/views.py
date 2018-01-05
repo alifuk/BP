@@ -13,11 +13,10 @@ import time
 import hashlib
 import random
 
-
-
 import MysakBP.local_settings
 
 operation_files = {}
+user_folder = ''
 
 
 def find_files():
@@ -33,35 +32,39 @@ def find_files():
 
 
 def uploadImage(request):
-    if request.method == "POST":
-        if request.FILES['fileToUpload']:
-            img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
-            image_name = request.FILES['fileToUpload'].name
-            image_name = image_name.replace('upload', '')
-            cv2.imwrite(MysakBP.local_settings.STATIC_PATH + request.POST['user'] + '/upload_' + image_name, img)
+    if request.method == "POST" and 'fileToUpload' in request.FILES:
+        img = cv2.imread(request.FILES['fileToUpload'].temporary_file_path())
+        image_name = request.FILES['fileToUpload'].name
+        image_name = image_name.replace('upload', '')
+        cv2.imwrite(MysakBP.local_settings.STATIC_PATH + request.POST['user'] + '/upload_' + image_name, img)
     else:
         return HttpResponse('Nenahráno' + os.getcwd())
 
     return HttpResponse('Nahráno' + os.getcwd())
 
 
-def count(request, question_id):
-    return HttpResponse('Eeeej' + question_id)
-
-
 def saveThimbnailImage(img_to_write, operation_counter):
-    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + 'thumb_' + str(operation_counter) + '.png', img_to_write)
+    global user_folder
+    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + user_folder +'/thumb_' + str(operation_counter) + '.png', img_to_write)
+
+def deleteAllThumbnailImages():
+    global user_folder
+    for filename in os.listdir(MysakBP.local_settings.STATIC_PATH + user_folder):
+        if 'thumb' in filename:
+            os.remove(MysakBP.local_settings.STATIC_PATH + user_folder + '/'+filename)
 
 
 def work(request):
     find_files()
-
     img = np.zeros((10, 10, 3), np.uint8)
 
     json_data = json.loads(request.body)
+    global user_folder
+    user_folder = json_data[0][0]
 
+    deleteAllThumbnailImages()
     operation_counter = 0
-    for arr_of_definition in json_data:
+    for arr_of_definition in json_data[1:]:
 
         if arr_of_definition[0] in operation_files:
             operation_pointer = getattr(operation_files[arr_of_definition[0]], arr_of_definition[1])
@@ -88,13 +91,36 @@ def layout(request, user):
     }
     return render(request, 'index.html', context)
 
+
 def getFiles(request, user):
     f = []
-    for (dirpath, dirnames, filenames) in walk(MysakBP.local_settings.STATIC_PATH + user):
-        f.extend(filenames)
-        break
+    for filename in os.listdir(MysakBP.local_settings.STATIC_PATH + user):
+        if 'thumb' not in filename:
+            f.append(filename)
 
     return HttpResponse(json.dumps(f))
+
+
+def deleteFile(request):
+    jsonovitch = json.loads(request.body)
+    myfile = MysakBP.local_settings.STATIC_PATH + '/' + jsonovitch[0] + '/' + jsonovitch[1];
+    if os.path.isfile(myfile):
+        os.remove(myfile)
+
+    return HttpResponse('ok')
+
+
+def getAllOperationsWithParameters(request):
+
+
+    start = time.time()
+    for file in os.listdir(MysakBP.local_settings.OPERATIONS_PATH):
+        name = os.path.splitext(os.path.basename(file))[0]
+        operation_files[name] = importlib.import_module(MysakBP.local_settings.OPERATIONS_PATH_MODULE + name)
+
+    end = time.time()
+
+    return HttpResponse('no nvm')
 
 def login(request):
     text = str(random.random())
