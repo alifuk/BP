@@ -12,10 +12,12 @@ import cv2
 import time
 import hashlib
 import random
+import types
 
 import MysakBP.local_settings
 
 operation_files = {}
+operation_files_description = {}
 user_folder = ''
 
 
@@ -44,14 +46,17 @@ def uploadImage(request):
 
 
 def saveThimbnailImage(img_to_write, operation_counter):
+    # TODO aby obrázky který se lišej od poslední iterace se zapsali do nějakýho listu kterej se pošle na front
     global user_folder
-    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + user_folder +'/thumb_' + str(operation_counter) + '.png', img_to_write)
+    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + user_folder + '/thumb_' + str(operation_counter) + '.png',
+                img_to_write)
+
 
 def deleteAllThumbnailImages():
     global user_folder
     for filename in os.listdir(MysakBP.local_settings.STATIC_PATH + user_folder):
         if 'thumb' in filename:
-            os.remove(MysakBP.local_settings.STATIC_PATH + user_folder + '/'+filename)
+            os.remove(MysakBP.local_settings.STATIC_PATH + user_folder + '/' + filename)
 
 
 def work(request):
@@ -111,16 +116,31 @@ def deleteFile(request):
 
 
 def getAllOperationsWithParameters(request):
-
-
     start = time.time()
+    test_params = ['get_validation_params', 'get_validation_params', 'get_validation_params', 'get_validation_params',
+                   'get_validation_params', 'get_validation_params']
+
     for file in os.listdir(MysakBP.local_settings.OPERATIONS_PATH):
         name = os.path.splitext(os.path.basename(file))[0]
-        operation_files[name] = importlib.import_module(MysakBP.local_settings.OPERATIONS_PATH_MODULE + name)
+        module_import = importlib.import_module(MysakBP.local_settings.OPERATIONS_PATH_MODULE + name)
+        operations = {}
+        for function_in_module in dir(module_import):
+            if isinstance(module_import.__dict__.get(function_in_module), types.FunctionType):
+                pointer_to_function = getattr(module_import, function_in_module)
+                operations[function_in_module] = {
+                    'name': pointer_to_function.__doc__,
+                    'short': function_in_module,
+                    'params': pointer_to_function([], test_params)
+
+                }
+
+        operation_files_description[name] = {'name': module_import.__doc__,
+                                             'operations': operations
+                                             }
 
     end = time.time()
+    return HttpResponse(json.dumps(operation_files_description))
 
-    return HttpResponse('no nvm')
 
 def login(request):
     text = str(random.random())

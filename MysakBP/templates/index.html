@@ -64,149 +64,12 @@
     var category = {};
     var loader = document.getElementById('loader');
 
-    function initCategoryObject() {
-        var files_load = {
-            'name': 'Načíst soubor',
-            'short': 'load',
-            'params': [
-                {
-                    'type': 'text',
-                    'default': '',
-                    'label': 'Název souboru',
-                    'name': 'filename'
-
-                }
-            ]
-        };
-
-        var files_save = {
-            'name': 'Uložit soubor',
-            'short': 'save',
-            'params': [
-                {
-                    'type': 'text',
-                    'default': '',
-                    'label': 'Název souboru',
-                    'name': 'filename'
-
-                }
-            ]
-        };
-
-
-        var color_bw = {
-            'name': 'Konvertovat do stupňů šedi',
-            'short': 'bw'
-        };
-
-        var color_blue = {
-            'name': 'Filtrovat rozsah spektra',
-            'short': 'fcr',
-
-        };
-
-        var color_convert = {
-            'name': 'Konvertovat do barevného prostoru',
-            'short': 'convert',
-            'params': [
-                {
-                    'type': 'select',
-                    'label': 'Původní barevný prostor',
-                    'name': 'from',
-                    'options_list': ['GRAY', 'BGR', 'HSV']
-
-                },
-                {
-                    'type': 'select',
-                    'label': 'Cílový barevný prostor',
-                    'name': 'to',
-                    'options_list': ['GRAY', 'BGR', 'HSV']
-
-                }
-            ]
-
-        };
-
-        var transform_rotate = {
-            'name': 'Otočení',
-            'short': 'rotate',
-            'params': [
-                {
-                    'type': 'text',
-                    'default': '90',
-                    'label': 'Rotace o počet stupňů',
-                    'name': 'degrees'
-
-                }
-            ]
-        };
-        var transform_crop = {
-            'name': 'Ořez',
-            'short': 'crop'
-
-        };
-        var filter_smooth = {
-            'name': 'Vyhlazení',
-            'short': 'smooth',
-            'params': [
-                {
-                    'type': 'text',
-                    'default': '5',
-                    'label': 'Počet vyhlazovacích pixelů horizontálně',
-                    'name': 'pixel_count_horizontal'
-
-                },
-                {
-                    'type': 'text',
-                    'default': '5',
-                    'label': 'Počet vyhlazovacích pixelů vertikálně',
-                    'name': 'pixel_count_vertical'
-
-                }
-            ]
-        };
-
-        var detection_corner = {
-            'name': 'Detekce hran',
-            'short': 'corner',
-            'params': [
-                {
-                    'type': 'text',
-                    'default': '10',
-                    'label': 'Maximální počet hran k nalezení',
-                    'name': 'corner_count'
-
-                },
-                {
-                    'type': 'text',
-                    'default': '0.01',
-                    'label': 'Treshold',
-                    'name': 'treshold'
-
-                },
-                {
-                    'type': 'text',
-                    'default': '10',
-                    'label': 'Minimální vzdálenost hran',
-                    'name': 'minimum_distance'
-
-                }
-            ]
-        };
-
-        category['files'] = {'load': files_load, 'save': files_save};
-        category.color = {'gray': color_bw, 'filter': color_blue, 'convert': color_convert};
-        category.transform = {'rotate': transform_rotate, 'crop': transform_crop};
-        category.filter = {'smooth': filter_smooth};
-        category.detection = {'corner': detection_corner};
-    }
-
     function generate_params_form(sender) {
         var sender_block = sender.parentNode;
         selects = sender_block.getElementsByTagName('select');
         params_block = sender_block.getElementsByClassName('params')[0];
         params_block.innerHTML = '';
-        operation = category[selects[0].value][selects[1].value];
+        operation = category[selects[0].value].operations[selects[1].value];
         if (typeof operation !== 'undefined' && operation !== null) {
             for (var i in operation.params) {
                 if (operation.params[i].type === 'text') {
@@ -256,7 +119,7 @@
         }
     }
 
-    function validateButtons() {
+    function validateDeleteButton() {
         var delete_buttons = document.getElementsByClassName('delete_button');
         if (delete_buttons.length === 2) {
             delete_buttons[0].disabled = true;
@@ -270,7 +133,7 @@
         var sender_block_parent = sender_block.parentNode;
         sender_block_parent.removeChild(sender_block);
         redraw();
-        validateButtons();
+        validateDeleteButton();
         setBlocksBackgrounds();
 
     }
@@ -279,10 +142,11 @@
         var sender_block = sender.parentNode;
         var new_block = prepareNewBlock();
         insertAfter(new_block, sender_block);
-        validateButtons();
+        validateDeleteButton();
         setBlocksBackgrounds();
     }
 
+    //Clones block from pattern and returns it
     function prepareNewBlock() {
         var pattern = document.getElementById("edit_block_pattern");
         var new_block = pattern.cloneNode(true);
@@ -296,8 +160,8 @@
         var photo_frames = document.getElementsByClassName("photo_frame");
         for (var i = 0; i < photo_frames.length - 1; i++) {
             var selects = photo_frames[i].parentNode.getElementsByTagName('select');
-            if (selects[0].value != 'None' && selects[1].value != 'None'){
-                photo_frames[i].style.backgroundImage = 'url(./static/' + static_path + '/thumb_' + i + '.png?'+makeid()+')';
+            if (selects[0].value != 'None' && selects[1].value != 'None') {
+                photo_frames[i].style.backgroundImage = 'url(./static/' + static_path + '/thumb_' + i + '.png?' + makeid() + ')';
             }
 
         }
@@ -332,10 +196,10 @@
         none_option.value = 'None';
         selects[1].appendChild(none_option);
 
-        for (var i in category[selects[0].value]) {
+        for (var i in category[selects[0].value].operations) {
             var generated_option = new Option();
-            generated_option.text = category[selects[0].value][i].name;
-            generated_option.value = category[selects[0].value][i].short;
+            generated_option.text = category[selects[0].value].operations[i].name;
+            generated_option.value = i;
             selects[1].appendChild(generated_option)
         }
 
@@ -371,8 +235,14 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(xhttp.responseText);
+                console.log(JSON.parse(xhttp.responseText));
+                category = JSON.parse(xhttp.responseText);
                 loader.style.visibility = 'hidden';
+
+                insertFirstBlock();
+                //redraw();
+                validateDeleteButton();
+                setBlocksBackgrounds();
             }
         };
         xhttp.open("POST", "./get_operations", true);
@@ -481,12 +351,9 @@
 
     };
 
-    insertFirstBlock();
-    redraw();
-    validateButtons();
-    initCategoryObject();
+
     updateFiles();
-    setBlocksBackgrounds();
+    getOperations();
 
 </script>
 <style>
