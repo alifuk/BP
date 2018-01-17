@@ -34,12 +34,6 @@
 
 <div id="edit_block_pattern" style="display: none;">
     <select onchange="validateSelects(this); categoryFill(this);">
-        <option value="None">Zvolte kategorii operace</option>
-        <option value="files">Soubory</option>
-        <option value="color">Barvy</option>
-        <option value="transform">Transformace</option>
-        <option value="filter">Filtry</option>
-        <option value="detection">Detekce</option>
     </select><br>
     <select onchange="generate_params_form(this);redraw();" style="visibility: hidden;">
         <option value="None">Kappa pride</option>
@@ -63,6 +57,27 @@
     document.getElementById('files_upload_form_user').value = static_path;
     var category = {};
     var loader = document.getElementById('loader');
+
+
+    function fillCategoryOptionsIntoPattern() {
+        var pattern_block = document.getElementById('edit_block_pattern');
+        var pattern_select= pattern_block.getElementsByTagName('select')[0];
+
+        var choose_category_option = new Option();
+        choose_category_option.value = 'None';
+        choose_category_option.text = 'Zvolte kategorii operace';
+        pattern_select.appendChild(choose_category_option);
+
+        for( var i = 0; i < Object.keys(category).length; i++){
+            category_key = Object.keys(category)[i];
+            var category_option = new Option();
+            category_option.value = category_key;
+            category_option.text = category[category_key].name;
+            pattern_select.appendChild(category_option);
+        }
+
+
+    }
 
     function generate_params_form(sender) {
         var sender_block = sender.parentNode;
@@ -239,6 +254,7 @@
                 category = JSON.parse(xhttp.responseText);
                 loader.style.visibility = 'hidden';
 
+                fillCategoryOptionsIntoPattern()
                 insertFirstBlock();
                 //redraw();
                 validateDeleteButton();

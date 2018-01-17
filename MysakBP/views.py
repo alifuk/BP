@@ -121,6 +121,8 @@ def getAllOperationsWithParameters(request):
                    'get_validation_params', 'get_validation_params']
 
     for file in os.listdir(MysakBP.local_settings.OPERATIONS_PATH):
+        if file == '__pycache__':
+            continue
         name = os.path.splitext(os.path.basename(file))[0]
         module_import = importlib.import_module(MysakBP.local_settings.OPERATIONS_PATH_MODULE + name)
         operations = {}

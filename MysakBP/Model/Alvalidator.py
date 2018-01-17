@@ -5,7 +5,6 @@ class Alvalidator:
 
 
     def __init__(self, params):
-        print('ooobj')
         self.filters_description = []
         self.invalid_fields = []
 
@@ -27,7 +26,7 @@ class Alvalidator:
     def string_validate(self, input_string, description):
         if input_string is 'get_validation_params':
             string_description = {
-                'type': 'select',
+                'type': 'text',
                 'label': description,
             }
             self.filters_description.append(string_description)
@@ -35,12 +34,13 @@ class Alvalidator:
         else:
             return input_string
 
-    def range_validate(self, input_value, description, options_list):
+    def range_validate(self, input_value, description, options_list, default_option):
         if input_value is 'get_validation_params':
             range_description = {
                 'type': 'select',
                 'label': description,
-                'options_list': options_list
+                'options_list': options_list,
+                'default': default_option
             }
             self.filters_description.append(range_description)
             return 'test_list'
