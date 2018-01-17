@@ -79,12 +79,14 @@ def fcr(img, params):
     """Filtrace barevného rozsahu"""
     validator = av.Alvalidator(params)
 
+    color_range_from = validator.string_validate(params[0], 'Od')
+    color_range_to = validator.string_validate(params[1], 'Do')
     if validator.evaluate() is False:
         return validator.filters_description
 
     for y in range(0, img.__len__()):
         for x in range(0, img[0].__len__()):
-            if img[y][x][0] < 100 or img[y][x][0] > 150:
+            if img[y][x][0] > color_range_from or img[y][x][0] < color_range_to:
                 img[y][x][1] = 0
 
     return img

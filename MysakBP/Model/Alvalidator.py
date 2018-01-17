@@ -34,6 +34,42 @@ class Alvalidator:
         else:
             return input_string
 
+    def int_validate(self, input_string, description, default_value):
+        if input_string is 'get_validation_params':
+            string_description = {
+                'type': 'text',
+                'label': description,
+                'default': default_value
+            }
+            self.filters_description.append(string_description)
+            return 'test_string'
+        else:
+            return int(input_string)
+
+    def float_validate(self, input_string, description, default_value):
+        if input_string is 'get_validation_params':
+            string_description = {
+                'type': 'text',
+                'label': description,
+                'default': default_value
+            }
+            self.filters_description.append(string_description)
+            return 'test_string'
+        else:
+            return float(input_string)
+
+    def file_validate(self, input_string, description):
+        if input_string is 'get_validation_params':
+            string_description = {
+                'type': 'myfile',
+                'label': description
+            }
+            self.filters_description.append(string_description)
+            return 'test_string'
+        else:
+            return input_string
+
+
     def range_validate(self, input_value, description, options_list, default_option):
         if input_value is 'get_validation_params':
             range_description = {

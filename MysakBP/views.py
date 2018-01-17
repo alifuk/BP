@@ -48,7 +48,7 @@ def uploadImage(request):
 def saveThimbnailImage(img_to_write, operation_counter):
     # TODO aby obrázky který se lišej od poslední iterace se zapsali do nějakýho listu kterej se pošle na front
     global user_folder
-    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + user_folder + '/thumb_' + str(operation_counter) + '.png',
+    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + user_folder + '/thumb_' + str(operation_counter) + '.jpg',
                 img_to_write)
 
 
@@ -149,8 +149,22 @@ def login(request):
     text = text.encode()
     something_random = hashlib.sha224(text).hexdigest()
 
-    path = MysakBP.local_settings.STATIC_PATH + something_random
-    if not os.path.exists(path):
-        os.makedirs(path)
+    if 'static_path' in request.COOKIES:
+        if os.path.exists(MysakBP.local_settings.STATIC_PATH + request.COOKIES['static_path']):
+            return redirect('./' + request.COOKIES['static_path'])
 
+    static_path = MysakBP.local_settings.STATIC_PATH + something_random
+    if not os.path.exists(static_path):
+        os.makedirs(static_path)
+
+        img = cv2.imread(MysakBP.local_settings.STATIC_PATH + '/example_1.jpeg')
+        cv2.imwrite(static_path + '/example_1.jpeg', img)
+        img = cv2.imread(MysakBP.local_settings.STATIC_PATH + '/example_2.jpeg')
+        cv2.imwrite(static_path + '/example_2.jpeg', img)
+        img = cv2.imread(MysakBP.local_settings.STATIC_PATH + '/example_3.jpeg')
+        cv2.imwrite(static_path + '/example_3.jpeg', img)
+
+
+    else:
+        return redirect('.')
     return redirect('./' + something_random)

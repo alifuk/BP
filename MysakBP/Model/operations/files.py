@@ -4,13 +4,13 @@ import MysakBP.local_settings
 import numpy as np
 import MysakBP.views as v
 import MysakBP.Model.Alvalidator as av
+import os
 
 def load(img, params):
-    '''
-        Load image
-        '''
+    '''Načíst soubor'''
+
     validator = av.Alvalidator(params)
-    filename = validator.string_validate(params[0], 'Název souboru')
+    filename = validator.file_validate(params[0], 'Název souboru')
     if validator.evaluate() is False:
         return validator.filters_description
 
@@ -22,9 +22,7 @@ def load(img, params):
 
 
 def save(img, params):
-    '''
-    Save image
-    '''
+    '''Uložit soubor'''
     filename = params[0]
     try:
         cv2.imwrite(MysakBP.local_settings.STATIC_PATH + v.user_folder + '/generated_' + filename, img)

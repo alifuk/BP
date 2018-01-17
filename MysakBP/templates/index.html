@@ -52,23 +52,32 @@
         return v ? v[2] : null;
     }
 
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
     var csrftoken = getCookie('csrftoken');
     var static_path = window.location.pathname.replace('/', '');
+    setCookie('static_path',static_path, 10000);
     document.getElementById('files_upload_form_user').value = static_path;
     var category = {};
+    var images = [];
     var loader = document.getElementById('loader');
 
 
     function fillCategoryOptionsIntoPattern() {
         var pattern_block = document.getElementById('edit_block_pattern');
-        var pattern_select= pattern_block.getElementsByTagName('select')[0];
+        var pattern_select = pattern_block.getElementsByTagName('select')[0];
 
         var choose_category_option = new Option();
         choose_category_option.value = 'None';
         choose_category_option.text = 'Zvolte kategorii operace';
         pattern_select.appendChild(choose_category_option);
 
-        for( var i = 0; i < Object.keys(category).length; i++){
+        for (var i = 0; i < Object.keys(category).length; i++) {
             category_key = Object.keys(category)[i];
             var category_option = new Option();
             category_option.value = category_key;
@@ -116,6 +125,24 @@
 
                     params_block.appendChild(label);
                     params_block.appendChild(param_text);
+
+                }
+
+                if (operation.params[i].type === 'myfile') {
+                    var files_select = document.createElement("SELECT");
+                    files_select.setAttribute('onchange', 'redraw();');
+                    var label = document.createElement("p");
+                    label.innerText = operation.params[i].label;
+                    for (var img_index in images) {
+
+                        var option = document.createElement("OPTION");
+                        option.value = images[img_index];
+                        option.text = images[img_index];
+                        files_select.appendChild(option);
+                    }
+
+                    params_block.appendChild(label);
+                    params_block.appendChild(files_select);
 
                 }
             }
@@ -176,7 +203,7 @@
         for (var i = 0; i < photo_frames.length - 1; i++) {
             var selects = photo_frames[i].parentNode.getElementsByTagName('select');
             if (selects[0].value != 'None' && selects[1].value != 'None') {
-                photo_frames[i].style.backgroundImage = 'url(./static/' + static_path + '/thumb_' + i + '.png?' + makeid() + ')';
+                photo_frames[i].style.backgroundImage = 'url(./static/' + static_path + '/thumb_' + i + '.jpg?' + makeid() + ')';
             }
 
         }
@@ -197,6 +224,14 @@
         var new_block = prepareNewBlock();
         pattern.appendChild(new_block);
         setBlocksBackgrounds();
+
+        new_block_selects = new_block.getElementsByTagName('select');
+        new_block_selects[0].selectedIndex = 3;
+        validateSelects(new_block_selects[0]);
+        categoryFill(new_block_selects[0]);
+        new_block_selects[1].selectedIndex = 1;
+        generate_params_form(new_block_selects[1]);
+        redraw();
     }
 
 
@@ -318,16 +353,10 @@
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
 
-
-    function updateFiles() {
-
+    function changeImages(){
         var uploaded_images_div = document.getElementById('uploaded_images');
         uploaded_images_div.innerHTML = '';
-        var xatom = new XMLHttpRequest();
-        xatom.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var images = JSON.parse(xatom.responseText);
-                for (var img in images) {
+        for (var img in images) {
                     var img_div_element = document.createElement('div');
                     img_div_element.style.width = '200px';
                     img_div_element.style.height = '200px';
@@ -344,8 +373,17 @@
                     img_div_element.appendChild(delete_button);
                     uploaded_images_div.appendChild(img_div_element);
                 }
+    }
 
 
+    function updateFiles() {
+
+
+        var xatom = new XMLHttpRequest();
+        xatom.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                images = JSON.parse(xatom.responseText);
+                changeImages();
             }
         };
         xatom.open("POST", "./get_files/" + static_path, true);
