@@ -48,7 +48,12 @@ def uploadImage(request):
 def saveThimbnailImage(img_to_write, operation_counter):
     # TODO aby obrázky který se lišej od poslední iterace se zapsali do nějakýho listu kterej se pošle na front
     global user_folder
-    cv2.imwrite(MysakBP.local_settings.STATIC_PATH + user_folder + '/thumb_' + str(operation_counter) + '.jpg',
+    #width, height, depth = img_to_write.shape
+    #if type(img_to_write) ==
+
+    if type(img_to_write) is not list:
+
+        cv2.imwrite(MysakBP.local_settings.STATIC_PATH + user_folder + '/thumb_' + str(operation_counter) + '.jpg',
                 img_to_write)
 
 
@@ -59,13 +64,21 @@ def deleteAllThumbnailImages():
             os.remove(MysakBP.local_settings.STATIC_PATH + user_folder + '/' + filename)
 
 
+
 def work(request):
+
     find_files()
     img = np.zeros((10, 10, 3), np.uint8)
+
+
+
 
     json_data = json.loads(request.body)
     global user_folder
     user_folder = json_data[0][0]
+
+    #with open(MysakBP.local_settings.STATIC_PATH + user_folder + '/last_work.json', 'w') as file:
+    #    file.write(str(request.body))
 
     deleteAllThumbnailImages()
     operation_counter = 0
@@ -100,7 +113,7 @@ def layout(request, user):
 def getFiles(request, user):
     f = []
     for filename in os.listdir(MysakBP.local_settings.STATIC_PATH + user):
-        if 'thumb' not in filename:
+        if 'thumb' not in filename and 'last_work' not in filename:
             f.append(filename)
 
     return HttpResponse(json.dumps(f))
@@ -163,6 +176,8 @@ def login(request):
         cv2.imwrite(static_path + '/example_2.jpeg', img)
         img = cv2.imread(MysakBP.local_settings.STATIC_PATH + '/example_3.jpeg')
         cv2.imwrite(static_path + '/example_3.jpeg', img)
+        img = cv2.imread(MysakBP.local_settings.STATIC_PATH + '/example_4.jpg')
+        cv2.imwrite(static_path + '/example_4.jpg', img)
 
 
     else:

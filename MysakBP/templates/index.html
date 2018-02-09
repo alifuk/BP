@@ -42,7 +42,9 @@
     <button onclick="addBlock(this)">+</button>
     <button class="delete_button" onclick="deleteBlock(this)">X</button>
     <div class="photo_frame">
-        <
+        <a href="http://www.facebook.com" style="display: block; width: 100%; height: 100%" target="_blank">
+
+        </a>
 
     </div>
 </div>
@@ -204,6 +206,7 @@
         for (var i = 0; i < photo_frames.length - 1; i++) {
             var selects = photo_frames[i].parentNode.getElementsByTagName('select');
             if (selects[0].value != 'None' && selects[1].value != 'None') {
+                var href_block = photo_frames[i].getElementsByTagName('a')[0].href = './static/' + static_path + '/thumb_' + i + '.jpg?';
                 photo_frames[i].style.backgroundImage = 'url(./static/' + static_path + '/thumb_' + i + '.jpg?' + makeid() + ')';
             }
 
@@ -227,7 +230,7 @@
         setBlocksBackgrounds();
 
         new_block_selects = new_block.getElementsByTagName('select');
-        new_block_selects[0].selectedIndex = 3;
+        new_block_selects[0].selectedIndex = 4;
         validateSelects(new_block_selects[0]);
         categoryFill(new_block_selects[0]);
         new_block_selects[1].selectedIndex = 1;

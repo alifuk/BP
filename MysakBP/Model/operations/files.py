@@ -10,11 +10,11 @@ def load(img, params):
     '''Načíst soubor'''
 
     validator = av.Alvalidator(params)
-    filename = validator.file_validate(params[0], 'Název souboru')
+    img = validator.file_validate(params[0], 'Název souboru')
     if validator.evaluate() is False:
         return validator.filters_description
 
-    img = cv2.imread(MysakBP.local_settings.STATIC_PATH + v.user_folder + '/' + filename)
+    #img = cv2.imread(MysakBP.local_settings.STATIC_PATH + v.user_folder + '/' + filename)
     if str(img) != 'None':
         return img
     else:

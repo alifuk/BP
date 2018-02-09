@@ -1,5 +1,7 @@
 import numpy as np
-
+import cv2
+import MysakBP.local_settings
+import MysakBP.views as v
 
 class Alvalidator:
 
@@ -67,7 +69,7 @@ class Alvalidator:
             self.filters_description.append(string_description)
             return 'test_string'
         else:
-            return input_string
+            return cv2.imread(MysakBP.local_settings.STATIC_PATH + v.user_folder + '/' + input_string)
 
 
     def range_validate(self, input_value, description, options_list, default_option):
