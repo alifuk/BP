@@ -70,9 +70,6 @@ def work(request):
     find_files()
     img = np.zeros((10, 10, 3), np.uint8)
 
-
-
-
     json_data = json.loads(request.body)
     global user_folder
     user_folder = json_data[0][0]
@@ -118,6 +115,11 @@ def getFiles(request, user):
 
     return HttpResponse(json.dumps(f))
 
+def getSavedCommand(request, user):
+    with open(MysakBP.local_settings.STATIC_PATH + user + '/last_work.json', 'r') as file:
+        last_command = file.read()
+
+    return HttpResponse(last_command)
 
 def deleteFile(request):
     jsonovitch = json.loads(request.body)

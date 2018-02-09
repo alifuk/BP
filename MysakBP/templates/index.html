@@ -230,10 +230,13 @@
         setBlocksBackgrounds();
 
         new_block_selects = new_block.getElementsByTagName('select');
-        new_block_selects[0].selectedIndex = 4;
+        //new_block_selects[0].selectedIndex = 4;
+        new_block_selects[0].value = 'files'
         validateSelects(new_block_selects[0]);
         categoryFill(new_block_selects[0]);
-        new_block_selects[1].selectedIndex = 1;
+        //new_block_selects[1].selectedIndex = 1;
+
+        new_block_selects[1].value = 'load'
         generate_params_form(new_block_selects[1]);
         redraw();
     }
@@ -285,7 +288,6 @@
 
         loader.style.visibility = 'visible';
 
-        csrftoken = getCookie('csrftoken');
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -294,13 +296,34 @@
                 loader.style.visibility = 'hidden';
 
                 fillCategoryOptionsIntoPattern()
-                insertFirstBlock();
+                getSavedCommand();
+
+            }
+        };
+        xhttp.open("POST", "./get_operations", true);
+        xhttp.setRequestHeader('X-CSRFToken', csrftoken)
+        xhttp.send();
+
+    }
+
+    function getSavedCommand() {
+        loader.style.visibility = 'visible';
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('saved command');
+                console.log(xhttp.responseText);
+                saved_command = JSON.parse(xhttp.responseText);
+                loader.style.visibility = 'hidden';
+
+                //insertSavedBlocks();
                 //redraw();
                 validateDeleteButton();
                 setBlocksBackgrounds();
             }
         };
-        xhttp.open("POST", "./get_operations", true);
+        xhttp.open("POST", "./get_saved_command/" + static_path, true);
         xhttp.setRequestHeader('X-CSRFToken', csrftoken)
         xhttp.send();
 
