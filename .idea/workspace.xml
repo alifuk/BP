@@ -2,13 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="342d16b3-8b47-4cbe-98fc-a963d4e09381" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MysakBP/Model/mqueue.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MysakBP/static/example_4.jpg" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bakalarka/urls.py" afterPath="$PROJECT_DIR$/Bakalarka/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/apps.py" afterPath="$PROJECT_DIR$/MysakBP/apps.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/static/.gitignore" afterPath="$PROJECT_DIR$/MysakBP/static/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/templates/index.html" afterPath="$PROJECT_DIR$/MysakBP/templates/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MysakBP/views.py" afterPath="$PROJECT_DIR$/MysakBP/views.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,8 +25,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MysakBP/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="601">
-              <caret line="152" column="32" lean-forward="true" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="32" />
+            <state relative-caret-position="465">
+              <caret line="153" column="0" lean-forward="false" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -147,8 +140,8 @@
         <option value="$PROJECT_DIR$/MysakBP/aa.py" />
         <option value="$PROJECT_DIR$/MysakBP/a.txt" />
         <option value="$PROJECT_DIR$/MysakBP/static/.gitignore" />
-        <option value="$PROJECT_DIR$/MysakBP/views.py" />
         <option value="$PROJECT_DIR$/MysakBP/templates/index.html" />
+        <option value="$PROJECT_DIR$/MysakBP/views.py" />
       </list>
     </option>
   </component>
@@ -443,6 +436,16 @@
           <line>13</line>
           <option name="timeStamp" value="79" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MysakBP/views.py</url>
+          <line>153</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MysakBP/views.py</url>
+          <line>144</line>
+          <option name="timeStamp" value="81" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -451,7 +454,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="80" />
+      <option name="time" value="82" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Python.DjangoServer">
@@ -709,7 +712,7 @@
         <state relative-caret-position="442">
           <caret line="50" column="0" lean-forward="false" selection-start-line="50" selection-start-column="0" selection-end-line="54" selection-end-column="83" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#10#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -760,8 +763,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MysakBP/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="601">
-          <caret line="152" column="32" lean-forward="true" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="32" />
+        <state relative-caret-position="465">
+          <caret line="153" column="0" lean-forward="false" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
           </folding>

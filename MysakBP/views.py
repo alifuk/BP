@@ -131,6 +131,9 @@ def getFiles(request, user):
     if 'mythreads' not in globals():
         mythreads = {}
 
+    if 'goon' not in globals():
+        goon = {}
+
     if user in mythreads:
         print('job již spuštěn')
     else:
@@ -138,6 +141,7 @@ def getFiles(request, user):
         mythreads[user].start()
         mythreads[user].join()
         mythreads.pop(user)
+        #goon.pop(user)
         print('done')
     #job()
 
