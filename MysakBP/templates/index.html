@@ -319,6 +319,9 @@
 
                 //insertSavedBlocks();
                 //redraw();
+                if (saved_command["0"] == undefined) {
+                    insertFirstBlock();
+                }
                 validateDeleteButton();
                 setBlocksBackgrounds();
             }
@@ -409,8 +412,10 @@
         var xatom = new XMLHttpRequest();
         xatom.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                images = JSON.parse(xatom.responseText);
+                console.log(xatom.responseText);
+                /*images = JSON.parse(xatom.responseText);
                 changeImages();
+                */
             }
         };
         xatom.open("POST", "./get_files/" + static_path, true);

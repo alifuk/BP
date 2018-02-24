@@ -14,6 +14,8 @@ import hashlib
 import random
 import types
 
+import threading
+
 import MysakBP.local_settings
 
 operation_files = {}
@@ -67,6 +69,8 @@ def deleteAllThumbnailImages():
 
 def work(request):
 
+
+
     find_files()
     img = np.zeros((10, 10, 3), np.uint8)
 
@@ -89,6 +93,8 @@ def work(request):
     return HttpResponse(os.getcwd())
 
 
+
+
 def layout(request, user):
     path = MysakBP.local_settings.STATIC_PATH + user
     if not os.path.exists(path):
@@ -108,17 +114,55 @@ def layout(request, user):
 
 
 def getFiles(request, user):
+
+    '''
     f = []
     for filename in os.listdir(MysakBP.local_settings.STATIC_PATH + user):
         if 'thumb' not in filename and 'last_work' not in filename:
             f.append(filename)
 
+
     return HttpResponse(json.dumps(f))
+
+    '''
+
+
+    global mythreads
+    if 'mythreads' not in globals():
+        mythreads = {}
+
+    if user in mythreads:
+        print('job již spuštěn')
+    else:
+        mythreads[user] = threading.Thread(target=job)
+        mythreads[user].start()
+        mythreads[user].join()
+        mythreads.pop(user)
+        print('done')
+    #job()
+
+
+
+    return HttpResponse('somethingg')
+
+def job():
+
+    print('Starting job')
+    start = time.perf_counter()
+    print(threading.get_ident())
+    for i in range(1,100000000):
+        k = 9
+    end = time.perf_counter()
+    print('job done in ' + str(end-start))
+    return
+
+def nothing():
+    return
 
 def getSavedCommand(request, user):
     with open(MysakBP.local_settings.STATIC_PATH + user + '/last_work.json', 'r') as file:
         last_command = file.read()
-
+    return HttpResponse('{}')
     return HttpResponse(last_command)
 
 def deleteFile(request):
@@ -131,6 +175,8 @@ def deleteFile(request):
 
 
 def getAllOperationsWithParameters(request):
+
+
     start = time.time()
     test_params = ['get_validation_params', 'get_validation_params', 'get_validation_params', 'get_validation_params',
                    'get_validation_params', 'get_validation_params']
@@ -178,8 +224,6 @@ def login(request):
         cv2.imwrite(static_path + '/example_2.jpeg', img)
         img = cv2.imread(MysakBP.local_settings.STATIC_PATH + '/example_3.jpeg')
         cv2.imwrite(static_path + '/example_3.jpeg', img)
-        img = cv2.imread(MysakBP.local_settings.STATIC_PATH + '/example_4.jpg')
-        cv2.imwrite(static_path + '/example_4.jpg', img)
 
 
     else:
