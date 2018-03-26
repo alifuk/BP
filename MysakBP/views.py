@@ -75,6 +75,7 @@ def work(request):
     img = np.zeros((10, 10, 3), np.uint8)
 
     json_data = json.loads(request.body)
+    print(request.body)
     global user_folder
     user_folder = json_data[0][0]
 
@@ -115,7 +116,7 @@ def layout(request, user):
 
 def getFiles(request, user):
 
-    '''
+
     f = []
     for filename in os.listdir(MysakBP.local_settings.STATIC_PATH + user):
         if 'thumb' not in filename and 'last_work' not in filename:
@@ -146,7 +147,7 @@ def getFiles(request, user):
     #job()
 
 
-
+    '''
     return HttpResponse('somethingg')
 
 def job():
@@ -164,8 +165,8 @@ def nothing():
     return
 
 def getSavedCommand(request, user):
-    with open(MysakBP.local_settings.STATIC_PATH + user + '/last_work.json', 'r') as file:
-        last_command = file.read()
+    #with open(MysakBP.local_settings.STATIC_PATH + user + '/last_work.json', 'r') as file:
+    #    last_command = file.read()
     return HttpResponse('{}')
     return HttpResponse(last_command)
 

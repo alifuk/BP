@@ -91,6 +91,19 @@ def fcr(img, params):
 
     return img
 
+def equalize(img, params):
+    '''Ekvalizace jasu'''
+
+    #for x in range(0, len(img)):
+    #    for y in range(0, len(img[0])):
+    #        img[x][y] = 255 - img[x][y]
+    validator = av.Alvalidator(params)
+
+    if validator.evaluate() is False:
+        return validator.filters_description
+    #h, w = img.shape
+
+    return cv2.equalizeHist(img)
 
 def invert(img, params):
     '''Inverze jasu'''

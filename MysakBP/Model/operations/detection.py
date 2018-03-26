@@ -3,6 +3,17 @@ import cv2
 import numpy as np
 import MysakBP.Model.Alvalidator as av
 
+def canny(img, params):
+    """Detekce hran CANNY"""
+    validator = av.Alvalidator(params)
+    minVal = validator.int_validate(params[0], 'minVal ', 100)
+    aperture_size = validator.int_validate(params[1], 'aperture_size', 200)
+    if validator.evaluate() is False:
+        return validator.filters_description
+
+    return cv2.Canny(img, minVal, aperture_size)
+
+
 
 def corner(img, params):
     """Detekce hran"""

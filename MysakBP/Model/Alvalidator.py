@@ -44,7 +44,7 @@ class Alvalidator:
                 'default': default_value
             }
             self.filters_description.append(string_description)
-            return 'test_string'
+            return 42
         else:
             return int(input_string)
 
@@ -86,5 +86,5 @@ class Alvalidator:
             if input_value in options_list:
                 return input_value
             else:
-                self.invalid_fields.append(description)
+                self.invalid_fields.append([description, input_value])
                 return ''
